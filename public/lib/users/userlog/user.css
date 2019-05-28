@@ -1,0 +1,11 @@
+#logImg {
+    position: fixed;
+    z-index: 10;
+
+    background-color: #161616;
+    box-shadow: inset 0 0 30px #070707;
+    transition: background-color 1s;
+}
+#logImg:hover{
+    background-color: #454545
+}

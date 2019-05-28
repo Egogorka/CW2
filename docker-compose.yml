@@ -1,0 +1,39 @@
+version: '3'
+
+volumes:
+    logs:
+        driver: local
+    mysql_data:
+        driver: local
+
+services:
+    slim:
+        build: docker/php
+        working_dir: /var/www
+        command: php -S 0.0.0.0:8080 -t public
+        environment:
+            docker: "true"
+        ports:
+            - 8080:8080
+        depends_on:
+          - mysql
+        volumes:
+            - .:/var/www
+            - logs:/var/www/logs
+    mysql:
+        image: 'bitnami/mysql:5.7'
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: test
+            MYSQL_USER: test
+            MYSQL_PASSWORD: test
+#        ports:
+#            - "3306"
+        volumes:
+            # create volumes for use
+            - mysql_data:/var/lib/mysql
+            # bind mount my local my.cnf
+            - $PWD/docker/mysql/my.cnf:/etc/my.cnf
+#        command:
+            # Workaround for no my.cnf in image
+#            - '--user=mysql'

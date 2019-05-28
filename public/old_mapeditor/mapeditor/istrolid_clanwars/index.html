@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<SCRIPT type="text/javascript" src="../useful/jquery.min.js"></SCRIPT>
+
+
+</head>
+<body style="background-image: url(/images/background_.jpg);">
+
+<!--<div id="crutch">  Костыль для отображения тулбара по середине экрана. -->
+<div id="tool_box">
+	<div style="display: block; float: right;">
+		Enter map code to load <label><input type="text" id="text_mapload"></label> <button id="btn_mapload">Upload</button>
+	</div>
+	<div style="margin-bottom: 10px">Select a structure or hexagon to place</div>
+
+	<div id="folder_gallery">
+
+		<button id="decreace">&lt;</button>
+		<button id="increace">&gt;</button>
+
+		<div id="images_gallery">
+		</div>
+	</div>
+</div>
+
+<div id="copyright" style="position: fixed; z-index: 9999; min-width: 200px; min-height: 40px;"> 
+<span style="color: white"> Egogorka © Copyright 2017-2018 <br>
+ 	connect me : bike034@mail.ru</span></div>
+
+<div id="hexagons_board" style="
+ width: 100%;  min-width : 4500px; 
+ height: 100%; min-height: 2900px;
+ position: absolute;
+ "></div>
+
+<div id="prompt-container">
+	<div id="signup">
+ 		<form id="loginform" class="MachineCtxt">
+ 			Login:<br><input type="text" name="login"><br>
+ 			Password:<br><input type="password" name="pswrd1">
+ 			<input type="submit" value="login up">
+ 		</form><br>
+ 		<div id="loginlog">
+ 		If you have no account just click cancel button to start manipulating with map<br>
+ 		But with account you can name map and save it on our server.
+ 		</div>
+ 		<button id="noacc">cancel</button>
+	</div>
+</div>
+
+<div id="saver">
+<div><div>Save map: </div><div id="serversave" class="btn"></div></div>
+<div><div>Get map code: </div><div id="getmapcode" class="btn"></div></div>
+</div>
+<div class="closer" id="closersaver">X</div>
+<div class="closer" id="closertool_box">X</div>
+
+<!-- _ -->
+<div id="mapcode">
+	<form>
+	Map name: <input type="text" name="mapname"> <br>
+	Show this map in map list? <input type="checkbox" name="show"> <br>
+	<input type="submit" value="Save it!">
+	</form>
+</div>
+
+<script type="text/javascript" src="script.js"></script>
+</body>
+</html>

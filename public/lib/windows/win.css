@@ -1,0 +1,11 @@
+.window {
+    position: fixed;
+    display: none;
+    z-index: 90;
+    padding: 10px;
+}
+
+.window.center {
+    justify-content: center;
+    align-items: center;
+}
