@@ -1,0 +1,4 @@
+What should ~Manager object do?
+    Most things, that Dao can and more
+    Dao objects only sets the DB data in object-template, and after that
+    manager should load other object-like data for that object-template.
