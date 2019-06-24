@@ -19,12 +19,9 @@ class User implements UserInterface
 
     protected $clanId;
 
-
-
-
     // Setters
 
-    public function setId( int $id )
+    public function setId( ?int $id )
     {
         $this->id = $id;
     }
@@ -39,17 +36,17 @@ class User implements UserInterface
         $this->pass_hash = $pass_hash;
     }
 
-    public function setEmail(string $email)
+    public function setEmail(?string $email)
     {
         $this->email = $email;
     }
 
-    public function setClanId(int $id)
+    public function setClanId(?int $id)
     {
         $this->clanId = $id;
     }
 
-    public function setClan(ClanInterface $clan)
+    public function setClan(?ClanInterface $clan)
     {
         $this->clan = $clan;
     }
@@ -57,7 +54,7 @@ class User implements UserInterface
 
     // Getters
 
-    public function getId():? int
+    public function getId(): ?int
     {
         return $this->id;
     }

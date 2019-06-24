@@ -12,6 +12,7 @@ namespace eduslim\application\controller;
 use eduslim\domain\clan\Clan;
 use eduslim\domain\clan\ClansManager;
 use eduslim\domain\user\UserManager;
+use eduslim\interfaces\domain\clan\ClanInterface;
 use Projek\Slim\Plates;
 use Psr\Log\LoggerInterface;
 
@@ -46,7 +47,7 @@ class ClansController extends Controller
 
     protected function create(ServerRequestInterface $request, Response $response, array $args)
     {
-        $user = $this->addUser($request);
+        $user = $this->takeUser($request);
         dump($user);
 
         $post = $request->getParsedBody();
@@ -80,11 +81,12 @@ class ClansController extends Controller
 
     protected function   main(ServerRequestInterface $request, Response $response, array $args)
     {
-        $this->addUser($request);
+        $this->takeUser($request);
 
         $clans = $this->clansManager->findAll();
 
-        foreach ($clans as &$clan) {
+        /** @var ClanInterface $clan */
+        foreach ($clans as  &$clan) {
 
             if ($leader = $this->userManager->findById($clan->getLeaderId())) {
                 $clan->setLeader($leader);

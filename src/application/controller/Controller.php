@@ -31,7 +31,7 @@ class Controller
     }
 
     /** @return UserInterface */
-    protected function addUser(ServerRequestInterface $request)
+    protected function takeUser(ServerRequestInterface $request)
     {
         $user = $request->getAttribute('user');
         $this->renderer->addData(['user' => $user]);

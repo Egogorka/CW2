@@ -20,11 +20,11 @@ interface UserInterface
 
     public function setPassHash( string $password_hash);
 
-    public function setEmail( string $email);
+    public function setEmail( ?string $email);
 
-    public function setClan( ClanInterface $clan );
+    public function setClan( ?ClanInterface $clan );
 
-    public function setClanId( int $id );
+    public function setClanId( ?int $id );
 
 
     // Getters

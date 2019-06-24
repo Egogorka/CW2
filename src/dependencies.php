@@ -4,13 +4,13 @@
 $container = $app->getContainer();
 
 // view renderer
-$container['renderer'] = function ($c) {
+$container['renderer'] = function (\Psr\Container\ContainerInterface $c) {
     $settings = $c->get('settings')['renderer'];
     return new Slim\Views\PhpRenderer($settings['template_path']);
 };
 
 // monolog
-$container['logger'] = function ($c) {
+$container['logger'] = function ( \Psr\Container\ContainerInterface $c) {
     $settings = $c->get('settings')['logger'];
     $logger = new Monolog\Logger($settings['name']);
     $logger->pushProcessor(new Monolog\Processor\UidProcessor());
@@ -18,7 +18,7 @@ $container['logger'] = function ($c) {
     return $logger;
 };
 
-$container['view-slim'] = function ($c) {
+$container['view-slim'] = function (\Psr\Container\ContainerInterface $c) {
     $view = new \Projek\Slim\Plates($c->get('settings')['view']);
 
     // Set \Psr\Http\Message\ResponseInterface object
@@ -35,6 +35,8 @@ $container['view-slim'] = function ($c) {
 };
 
 //new \Projek\Slim\PlatesProvider();
+
+require __DIR__ . '/domain/Exceptions.php';
 
 require __DIR__ . '/infrastructure/di.php'; // Внешние приложения(?)
 

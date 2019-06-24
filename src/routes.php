@@ -25,12 +25,12 @@ $app->group('', function (\Slim\App $app) {
     $app->group('', function (\Slim\App $app){
 
         // Clan
-        $app->get('/clan/{id}', \eduslim\application\controller\ClanController::class );
-        $app->get('/clan/{id}/leader/{type}/', \eduslim\application\controller\ClanController::class );
+        $app->get('/clan/{clanId}', \eduslim\application\controller\ClanController::class );
+        $app->get('/clan/{clanId}/leader/{type}/', \eduslim\application\controller\ClanController::class );
 
         // Sessions
 
-        $app->get('/session/{id}', SessionController::class);
+        //$app->get('/session/{id}', SessionController::class);
         //$app->get(  );
 
     })->add(function(Request $request, Response $response, callable $next){

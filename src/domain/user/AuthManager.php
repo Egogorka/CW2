@@ -51,7 +51,7 @@ class AuthManager
 
         // Можем честно сказать, что это он
         $_SESSION['user-id'] = $dbUser->getId();
-
+        return true;
     }
 
 

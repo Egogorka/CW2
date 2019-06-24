@@ -9,8 +9,10 @@
 namespace eduslim\application\controller;
 
 
+use eduslim\domain\clan\ClanService;
 use eduslim\domain\clan\ClansManager;
 use eduslim\domain\maps\MapsManager;
+use eduslim\domain\ServiceException;
 use eduslim\domain\session\SessionManager;
 use eduslim\domain\user\UserManager;
 use eduslim\interfaces\domain\clan\ClanInterface;
@@ -34,20 +36,26 @@ class ClanController extends Controller
     /** @var MapsManager */
     protected $mapsManager;
 
-    public function __construct(LoggerInterface $logger, Plates $renderer, ClansManager $clansManager, UserManager $userManager, SessionManager $sessionManager, MapsManager $mapsManager)
+    /** @var ClanService */
+    protected $clanService;
+
+    public function __construct(LoggerInterface $logger, Plates $renderer, ClansManager $clansManager, UserManager $userManager /*, SessionManager $sessionManager, MapsManager $mapsManager*/, ClanService $clanService)
     {
         parent::__construct($logger, $renderer);
 
         $this->userManager = $userManager;
         $this->clansManager = $clansManager;
-        $this->sessionManager = $sessionManager;
-        $this->mapsManager = $mapsManager;
+       // $this->sessionManager = $sessionManager;
+        //$this->mapsManager = $mapsManager;
+        $this->clanService = $clanService;
     }
 
     public function __invoke(ServerRequestInterface $request, Response $response, array $args)
     {
-        $user = $this->addUser($request);
-        $clan = $args["clan"] = $this->clansManager->findById($args["id"] ?? null);
+        $user = $this->takeUser($request); // Get information about current user
+
+        $clan = $args["clan"] = $this->clansManager->findById($args["clanId"] ?? null);
+
         $this->renderer->addData(["clan" => $clan]);
 
         if ($user->getId() == $clan->getLeaderId()) {
@@ -67,39 +75,49 @@ class ClanController extends Controller
 
     protected function leader(array $get, ClanInterface $clan, array $args)
     {
-        switch ($args['type']) {
-            case "addUser":
-                $user = $this->userManager->findByName($get['username']);
 
-                if (!$user) {
-                    $args['error'] = "No such user";
-                    break;
-                }
-
-                $user->setClanId($clan->getId());
-
-                if (!$this->userManager->save($user)) {
-                    $args['error'] = "Database error";
-                    break;
-                }
-
-                break;
-            case "createSession":
-
-                if (!($map = $this->mapsManager->findByName($get['mapName']))) {
-                    $args['error'] = "No such map";
-                    break;
-                }
-                /*
-                if (!($action = $this->actionsManager->findByName($get['actionName']))){
-                    $args['error'] = "No such action";
-                    break;
-                }*/
-
-
-                break;
+        try {
+            $this->clanService->handle($args['type'], $clan,
+                [
+                    "user" => $this->userManager->findByName($get['username'])
+                ]
+            );
+        } catch (ServiceException $e){
+            $args['error'] = $e->getMessage();
         }
 
         return $args;
+
+//        switch ($args['type']) {
+//            case "addUser":
+//                /*if (!$user = $this->userManager->findByName($get['username'])) {
+//                    $args['error'] = "No such user";
+//                    break;
+//                }
+//
+//                $user->setClanId($clan->getId());
+//
+//                if (!$this->userManager->save($user)) {
+//                    $args['error'] = "Database error";
+//                    break;
+//                }*/
+//                $this->clanService
+//
+//                break;
+//            case "createSession":
+//
+//                if (!($map = $this->mapsManager->findByName($get['mapName']))) {
+//                    $args['error'] = "No such map";
+//                    break;
+//                }
+//                /*
+//                if (!($action = $this->actionsManager->findByName($get['actionName']))){
+//                    $args['error'] = "No such action";
+//                    break;
+//                }*/
+//
+//
+//                break;
+//        }
     }
 }

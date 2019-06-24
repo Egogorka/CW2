@@ -46,6 +46,9 @@ $container[\eduslim\application\controller\ClanController::class] = function (\P
         $c->get('logger'),
         $c->get('view-slim'),
         $c->get(\eduslim\domain\clan\ClansManager::class),
-        $c->get(\eduslim\domain\user\UserManager::class)
+        $c->get(\eduslim\domain\user\UserManager::class),
+        $c->get(\eduslim\domain\clan\ClanService::class)
     );
 };
+
+//

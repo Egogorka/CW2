@@ -7,15 +7,22 @@
  */
 ?>
 
+<?/** @var \eduslim\interfaces\domain\clan\ClanInterface $clan */?>
+
 <h2> Leader Interface </h2>
 
 <ul>
     <li>
         <h3>Users</h3>
-    <form action="/clan/<?=$clan->getId()?>/leader/addUser/" method="get">
-        <label>User to add : <input type="text" name="username"></label>
-        <input type="submit" value="Add!">
-    </form>
+        <form action="/clan/<?=$clan->getId()?>/leader/addUser/" method="get">
+            <label>User to add : <input type="text" name="username"></label>
+            <input type="submit" value="Add!">
+        </form>
+        <hr>
+        <form action="/clan/<?=$clan->getId()?>/leader/removeUser/" method="get">
+            <label>User to remove : <input type="text" name="username"></label>
+            <input type="submit" value="Remove!">
+        </form>
     </li>
 
     <li>
