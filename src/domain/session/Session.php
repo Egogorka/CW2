@@ -10,9 +10,8 @@ namespace eduslim\domain\session;
 
 
 use eduslim\interfaces\domain\action\ActionInterface;
-use eduslim\interfaces\domain\clan\ClanInterface;
 use eduslim\interfaces\domain\maps\MapInterface;
-use eduslim\interfaces\domain\sessions\MapStateInterface;
+use eduslim\interfaces\domain\mapstate\MapStateInterface;
 use eduslim\interfaces\domain\sessions\SessionInterface;
 
 class Session implements SessionInterface
@@ -58,12 +57,12 @@ class Session implements SessionInterface
     ///////////////////////////////////////////////////
     // Id
 
-        public function getId(): int
+        public function getId(): ?int
         {
             return $this->id;
         }
 
-        public function setId(int $id): void
+        public function setId(?int $id): void
         {
             $this->id = $id;
         }
@@ -168,15 +167,15 @@ class Session implements SessionInterface
 
         public function getMapStateR(): string
         {
-            return $this->mapState_r;
+            return $this->mapStateR;
         }
 
-        public function setMapStateR(string $mapState_r): void
+        public function setMapStateR(string $mapStateR): void
         {
-            $this->mapState_r = $mapState_r;
+            $this->mapStateR = $mapStateR;
         }
 
-        public function getMapState(): MapStateInterface
+        public function getMapState():?MapStateInterface
         {
             return $this->mapState;
         }
@@ -188,7 +187,7 @@ class Session implements SessionInterface
 
     ///////////////////////////////////////////////////
     // Clan manipulations
-
+    /*
     protected function selectClan(ClanInterface $clan)
     {
         foreach ($this->clans as $key => $clanM)
@@ -219,5 +218,5 @@ class Session implements SessionInterface
         {
             array_splice($this->clans, $key, 1);
         }
-    }
+    }*/
 }

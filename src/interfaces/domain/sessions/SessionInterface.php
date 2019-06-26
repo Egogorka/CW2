@@ -10,6 +10,7 @@ namespace eduslim\interfaces\domain\sessions;
 
 // TODO SessionInterface
 
+use eduslim\interfaces\domain\mapstate\MapStateInterface;
 use eduslim\interfaces\domain\action\ActionInterface;
 use eduslim\interfaces\domain\clan\ClanInterface;
 use eduslim\interfaces\domain\maps\MapInterface;
@@ -26,11 +27,6 @@ interface SessionInterface
     public function setMap(MapInterface $map);
     public function setAction(ActionInterface $action);
     public function setMapState(MapStateInterface $mapState);
-
-    // Clans manipulations
-    public function addClan(ClanInterface $clan);
-    public function findClan(ClanInterface $clan): bool ;
-    public function removeClan(ClanInterface $clan);
 
     // Getters
     public function getId():? int;

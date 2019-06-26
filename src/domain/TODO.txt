@@ -1,0 +1,21 @@
+//----------------------------------------------------
+// ClanWars TODO
+// Sessions Creating/Starting
+
+// Parts that needs to be done
+
+// MapState
+    [ ] MapState
+        [X] Cell
+            [X] Cell Interface
+        [X] Point
+            [X] Point Interface
+        [X] MapStateInterface
+    [ ] MapStateManager (if it needs one)
+
+// Actions
+    [ ] Actions interface
+    [ ] Actions Manager interface
+
+// Sessions
+

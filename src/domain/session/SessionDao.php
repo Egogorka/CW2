@@ -43,7 +43,7 @@ class SessionDao extends Dao
         $dbdata = $this->connection->fetchAll("SELECT * FROM sessions_clans WHERE clanId =:id", ["id" => $clan->getId()]);
         $result = array();
         foreach ($dbdata as $item){
-            $result[] = $this->findById($dbdata['sessionId']);
+            $result[] = $this->findById($item['sessionId']);
         }
         return $result;
     }
@@ -85,21 +85,21 @@ class SessionDao extends Dao
     {
         try {
             if ($session->getId()) {
-                $this->connection->perform('UPDATE sessions SET id=:id, name=:name, mapId=:mapId, actionId=:actionId, mapState_r=:mapState_r  WHERE id=:id;',
+                $this->connection->perform('UPDATE sessions SET id=:id, name=:name, mapId=:mapId, actionId=:actionId, mapStateR=:mapStateR  WHERE id=:id;',
                     [
                         'id' => $session->getId(),
                         'name' => $session->getName(),
                         'mapId' => $session->getMapId(),
                         'actionId' => $session->getActionId(),
-                        'mapState_r' => ($session->getMapState()) ? $session->getMapState()->convertToJSON() : null
+                        'mapStateR' => ($session->getMapState()) ? $session->getMapState()->ToString() : null
                     ]);
             } else {
-                $this->connection->perform('INSERT INTO sessions (name, mapId, actionId, mapState_r) VALUES (:name, :mapId, :actionId, :mapState_r);',
+                $this->connection->perform('INSERT INTO sessions (name, mapId, actionId, mapStateR) VALUES (:name, :mapId, :actionId, :mapStateR);',
                     [
                         'name' => $session->getName(),
                         'mapId' => $session->getMapId(),
                         'actionId' => $session->getActionId(),
-                        'mapState_r' => ($session->getMapState()) ? $session->getMapState()->convertToJSON() : null
+                        'mapStateR' => ($session->getMapState()) ? $session->getMapState()->ToString() : null
                     ]);
                 $id = $this->connection->lastInsertId();
                 $session->setId($id); // todo via reflection
