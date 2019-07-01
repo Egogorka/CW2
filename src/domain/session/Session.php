@@ -47,13 +47,6 @@ class Session implements SessionInterface
         /** @var MapStateInterface */
         protected $mapState;
 
-    // Clans
-        /** @var array */
-        protected $clansId;
-
-        /** @var array */
-        protected $clans;
-
     ///////////////////////////////////////////////////
     // Id
 
@@ -70,53 +63,30 @@ class Session implements SessionInterface
     ///////////////////////////////////////////////////
     // Name
 
-        public function getName(): string
+        public function getName(): ?string
         {
             return $this->name;
         }
 
-        public function setName(string $name): void
+        public function setName(?string $name): void
         {
             $this->name = $name;
         }
 
     ///////////////////////////////////////////////////
-    // Clans
-
-        public function getClansId(): array
-        {
-            return $this->clansId;
-        }
-
-        public function setClansId(array $clansId): void
-        {
-            $this->clansId = $clansId;
-        }
-
-        public function getClans(): array
-        {
-            return $this->clans;
-        }
-
-        public function setClans(array $clans): void
-        {
-            $this->clans = $clans;
-        }
-
-    ///////////////////////////////////////////////////
     // Map
 
-        public function getMapId(): int
+        public function getMapId(): ?int
         {
             return $this->mapId;
         }
 
-        public function setMapId(int $mapId): void
+        public function setMapId(?int $mapId): void
         {
             $this->mapId = $mapId;
         }
 
-        public function getMap(): MapInterface
+        public function getMap(): ?MapInterface
         {
             return $this->map;
         }
@@ -129,7 +99,7 @@ class Session implements SessionInterface
     ///////////////////////////////////////////////////
     // Actions
 
-        public function getActionId(): int
+        public function getActionId(): ?int
         {
             return $this->actionId;
         }
@@ -139,7 +109,7 @@ class Session implements SessionInterface
             $this->actionId = $actionId;
         }
 
-        public function getAction(): ActionInterface
+        public function getAction():? ActionInterface
         {
             return $this->action;
         }
@@ -152,7 +122,7 @@ class Session implements SessionInterface
     ///////////////////////////////////////////////////
     // Options
 
-        public function getOptions(): string
+        public function getOptions(): ?string
         {
             return $this->options;
         }
@@ -165,7 +135,7 @@ class Session implements SessionInterface
     ///////////////////////////////////////////////////
     // MapState
 
-        public function getMapStateR(): string
+        public function getMapStateR(): ?string
         {
             return $this->mapStateR;
         }
@@ -184,39 +154,4 @@ class Session implements SessionInterface
         {
             $this->mapState = $mapState;
         }
-
-    ///////////////////////////////////////////////////
-    // Clan manipulations
-    /*
-    protected function selectClan(ClanInterface $clan)
-    {
-        foreach ($this->clans as $key => $clanM)
-        {
-            if ( $clanM->getId() == $clan->getId() )
-                return $key;
-        }
-        return null;
-    }
-
-    public function addClan(ClanInterface $clan)
-    {
-        $this->clans[] = $clan;
-    }
-
-    public function findClan(ClanInterface $clan): bool
-    {
-        if ($key = $this->selectClan($clan))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public function removeClan(ClanInterface $clan)
-    {
-        if ($key = $this->selectClan($clan))
-        {
-            array_splice($this->clans, $key, 1);
-        }
-    }*/
 }

@@ -5,12 +5,12 @@
     if(!empty($user)) :
         ?>
 
-        <p> Hello, <?=$this->e($user->getUsername())?></p>
+        <b><?=$this->e($user->getUsername())?></b><br>
         <a href="/auth/unlog/">Unlog</a>
 
         <?php if(!empty($user->getClan())) : ?>
 
-            <a href="/clan/<?=$user->getClanId() ?>"><?=$user->getClan()->getName()?></a>
+            <b><a href="/clan/<?=$user->getClanId() ?>"><?=$user->getClan()->getName()?></a></b>
 
         <?php endif ?>
 

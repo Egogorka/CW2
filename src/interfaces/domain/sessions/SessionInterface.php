@@ -27,6 +27,7 @@ interface SessionInterface
     public function setMap(MapInterface $map);
     public function setAction(ActionInterface $action);
     public function setMapState(MapStateInterface $mapState);
+    public function setMapStateR(string $mapStateR);
 
     // Getters
     public function getId():? int;
@@ -38,4 +39,5 @@ interface SessionInterface
     public function getMap():? MapInterface;
     public function getAction():? ActionInterface;
     public function getMapState():? MapStateInterface;
+    public function getMapStateR(): ?string ;
 }

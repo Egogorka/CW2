@@ -10,62 +10,58 @@ namespace eduslim\domain\maps;
 
 
 use Atlas\Pdo\Connection;
+use eduslim\domain\user\UserDao;
+use eduslim\interfaces\domain\maps\MapInterface;
+use eduslim\interfaces\domain\maps\MapsManagerInterface;
 use Psr\Log\LoggerInterface;
 
-class MapsManager
+class MapsManager implements MapsManagerInterface
 {
 
-    /** @var  LoggerInterface */
+    /** @var LoggerInterface */
     protected $logger;
 
-    /** @var  Connection */
-    protected $connection;
+    /** @var MapsDao */
+    protected $mapsDao;
+
+    /** @var UserDao */
+    protected $userDao;
 
     /**
      * UserManager constructor.
      * @param LoggerInterface $logger
      * @param Connection $connection
      */
-    public function __construct(LoggerInterface $logger, Connection $connection)
+    public function __construct(LoggerInterface $logger, MapsDao $mapsDao, UserDao $userDao)
     {
         $this->logger     = $logger;
-        $this->connection = $connection;
+        $this->mapsDao    = $mapsDao;
+        $this->userDao    = $userDao;
     }
 
-    public function findById($id):?Map
+    protected function AssignCreator(MapInterface $map):MapInterface
     {
-        if ($result = $this->connection->fetchObject( 'SELECT * FROM maps WHERE id=:id', ['id' => $id], Map::class)) {
-            return $result;
-        }
-        return null;
-//        if ($result = $this->connection->fetchOne("SELECT * FROM maps WHERE username=:username",['username' => $name])) {
-//            $map = new Map();
-//            $map->setName($name);
-//            $map->setId($result['id']);
-//            $map->setCreator( $this->userManager->findById($result['creator']) );
-//            return $map;
-//        }
+        $map->setCreator($this->userDao->findById($map->getCreatorId()));
+        return $map;
     }
 
-    public function findByName($name):?Map
+    public function findById(int $id):?MapInterface
     {
-        if ($result = $this->connection->fetchObject( 'SELECT * FROM maps WHERE username=:username', ['name' => $name], Map::class)) {
-            return $result;
-        }
-        return null;
-//        if ($result = $this->connection->fetchOne("SELECT * FROM maps WHERE username=:username",['username' => $name])) {
-//            $map = new Map();
-//            $map->setName($name);
-//            $map->setId($result['id']);
-//            $map->setCreator( $this->userManager->findById($result['creator']) );
-//            return $map;
-//        }
-//        return null;
+        return $this->AssignCreator($this->mapsDao->findById($id));
+    }
+
+    public function findByName(?string $name):?MapInterface
+    {
+        return $this->AssignCreator($this->mapsDao->findByName($name));
     }
 
     public function findAll():?array
     {
-        return $this->connection->fetchObjects('SELECT * FROM maps', [], Map::class);
+        $maps = $this->mapsDao->findAll();
+        foreach($maps as &$map){
+            $this->AssignCreator($map);
+        }
+        return $maps;
     }
 
 

@@ -21,11 +21,13 @@ class Map implements MapInterface
     protected $name;
 
     /** @var string */
-    protected $map;
+    protected $mapR;
 
     /** @var int */
-    protected $creator; // id
+    protected $creatorId; // id
 
+    /** @var UserInterface */
+    protected $creator;
 
     // Setters
 
@@ -39,14 +41,19 @@ class Map implements MapInterface
         $this->name = $name;
     }
 
-    public function setCreator(int $userId)
+    public function setCreatorId(int $userId)
     {
         $this->creator = $userId;
     }
 
-    public function setMap(string $map)
+    public function setMapR(string $mapR)
     {
-        $this->map = $map;
+        $this->mapR = $mapR;
+    }
+
+    public function setCreator(UserInterface $user)
+    {
+        $this->creator = $user;
     }
 
 
@@ -62,14 +69,18 @@ class Map implements MapInterface
         return $this->name;
     }
 
-    public function getCreator():?int
+    public function getCreatorId():?int
     {
-        return $this->creator;
+        return $this->creatorId;
     }
 
-    public function getMap():?string
+    public function getMapR():?string
     {
-        return $this->map;
+        return $this->mapR;
+    }
 
+    public function getCreator(): ?UserInterface
+    {
+        return $this->creator;
     }
 }

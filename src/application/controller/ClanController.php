@@ -39,14 +39,14 @@ class ClanController extends Controller
     /** @var ClanService */
     protected $clanService;
 
-    public function __construct(LoggerInterface $logger, Plates $renderer, ClansManager $clansManager, UserManager $userManager /*, SessionManager $sessionManager, MapsManager $mapsManager*/, ClanService $clanService)
+    public function __construct(LoggerInterface $logger, Plates $renderer, ClansManager $clansManager, UserManager $userManager /*, SessionManager $sessionManager*/, MapsManager $mapsManager, ClanService $clanService)
     {
         parent::__construct($logger, $renderer);
 
         $this->userManager = $userManager;
         $this->clansManager = $clansManager;
        // $this->sessionManager = $sessionManager;
-        //$this->mapsManager = $mapsManager;
+        $this->mapsManager = $mapsManager;
         $this->clanService = $clanService;
     }
 
@@ -69,18 +69,26 @@ class ClanController extends Controller
             $args["clanLeaderBool"] = false;
 
         $args["clanMembers"] = $this->clansManager->getUsersOf($clan);
+        $args["sessions"] = $this->clansManager->getSessionsOf($clan);
 
         $this->renderer->render("clan", $args);
     }
 
     protected function leader(array $get, ClanInterface $clan, array $args)
     {
-
         try {
             $this->clanService->handle($args['type'], $clan,
-                [
-                    "user" => $this->userManager->findByName($get['username'])
-                ]
+                array(
+                    "user" => (!empty($get['username'])) ? $this->userManager->findByName($get['username']) : null,
+
+                    "sessionName" => $get['sessionName'] ?? null,
+
+                    "map" => (!empty($get["mapName"])) ? $this->mapsManager->findByName($get['mapName']) : null,
+
+                    "action" => null,
+
+                    "addClan" => (!empty($get['addClanName'])) ? $this->clansManager->findByName($get['addClanName']) : null,
+                )
             );
         } catch (ServiceException $e){
             $args['error'] = $e->getMessage();

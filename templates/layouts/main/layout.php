@@ -1,6 +1,6 @@
 <!-- Header + footer -->
 
-<html>
+<html lang="en">
 
 <head>
 

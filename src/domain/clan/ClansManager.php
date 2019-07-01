@@ -63,15 +63,12 @@ class ClansManager implements ClanManagerInterface
         $user = $this->userDao->findById($clan->getLeaderId());
         $clan->setLeader($user);
 
-
-
         return $clan;
     }
 
     public function findById(int $id): ?ClanInterface
     {
         return $this->AssignObjects($this->clansDao->findById($id));
-
     }
 
     public function findByName(string $name): ?ClanInterface

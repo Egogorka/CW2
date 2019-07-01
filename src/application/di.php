@@ -47,7 +47,18 @@ $container[\eduslim\application\controller\ClanController::class] = function (\P
         $c->get('view-slim'),
         $c->get(\eduslim\domain\clan\ClansManager::class),
         $c->get(\eduslim\domain\user\UserManager::class),
+        $c->get(\eduslim\domain\maps\MapsManager::class),
         $c->get(\eduslim\domain\clan\ClanService::class)
+    );
+};
+
+$container[\eduslim\application\controller\SessionController::class] = function (\Psr\Container\ContainerInterface $c) {
+    return new \eduslim\application\controller\SessionController(
+        $c->get('logger'),
+        $c->get('view-slim'),
+        $c->get(\eduslim\domain\user\UserManager::class),
+        $c->get(\eduslim\domain\clan\ClansManager::class),
+        $c->get(\eduslim\domain\session\SessionManager::class)
     );
 };
 

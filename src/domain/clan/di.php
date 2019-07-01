@@ -25,6 +25,7 @@ $container[\eduslim\domain\clan\ClansManager::class] = function (\Psr\Container\
 $container[\eduslim\domain\clan\ClanService::class] = function (\Psr\Container\ContainerInterface $c) {
     return new \eduslim\domain\clan\ClanService(
         $c->get(\eduslim\domain\clan\ClansManager::class),
-        $c->get(\eduslim\domain\user\UserManager::class)
+        $c->get(\eduslim\domain\user\UserManager::class),
+        $c->get(\eduslim\domain\session\SessionManager::class)
     );
 };

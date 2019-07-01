@@ -30,7 +30,7 @@ $app->group('', function (\Slim\App $app) {
 
         // Sessions
 
-        //$app->get('/session/{id}', SessionController::class);
+        $app->get('/session/{sessionId}', \eduslim\application\controller\SessionController::class);
         //$app->get(  );
 
     })->add(function(Request $request, Response $response, callable $next){
@@ -61,4 +61,4 @@ $app->group('', function (\Slim\App $app) {
 
 });
 
-
+//$app->get('/images/')

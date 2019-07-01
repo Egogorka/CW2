@@ -5,6 +5,13 @@
  * Date: 06.04.2019
  * Time: 17:29
  */
+
+/**@var \eduslim\interfaces\domain\clan\ClanInterface $clan
+ * @var bool $clanLeaderBool
+ * @var array $sessions
+ * @var array $clanMembers
+
+ */
 ?>
 
 <?=$this->layout("layouts/main/qwerty", ['title' => $clan->getName(), 'error' => $error ?? null]) ?>
@@ -22,7 +29,15 @@
         <hr style="size: 6px; width: calc(100%-20px);">
 
         <h2> List of current sessions</h2>
+        <ol>
+            <?php
+            /** @var \eduslim\interfaces\domain\sessions\SessionInterface $session */
+            foreach ($sessions as $session){
+                echo "<li>".$session->getName()."</li>";
+            }
 
+            ?>
+        </ol>
         <hr style="size: 6px; width: calc(100%-20px);">
 
         <h2> List of users </h2>

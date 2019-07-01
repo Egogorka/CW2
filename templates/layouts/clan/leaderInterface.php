@@ -27,10 +27,19 @@
 
     <li>
         <h3>Session</h3>
-        <form action="/clan/<?=$clan->getId()?>/leader/addSession/" method="get">
-            <label>Name : <input type="text" name="name"></label><br>
+        <form action="/clan/<?=$clan->getId()?>/leader/createSession/" method="get">
+            <label>Name : <input type="text" name="sessionName"></label><br>
             <label>Map name : <input type="text" name="mapName"></label><br>
-            <label>Action name : <input type="text" name="mapName"></label><br>
+            <label>Action name : <input type="text" name="actionName"></label><br>
+            <input type="submit" value="Add!">
+        </form>
+    </li>
+
+    <li>
+        <h3>Add Clan to a Session</h3>
+        <form action="/clan/<?=$clan->getId()?>/leader/addClan/" method="get">
+            <label>Clan name : <input type="text" name="addClanName"></label><br>
+            <label>Session name : <input type="text" name="sessionName"></label><br>
             <input type="submit" value="Add!">
         </form>
     </li>

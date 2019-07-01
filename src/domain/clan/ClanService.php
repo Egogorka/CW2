@@ -5,8 +5,11 @@ namespace eduslim\domain\clan;
 
 use eduslim\domain\ServiceException;
 
+use eduslim\domain\session\Session;
 use eduslim\interfaces\domain\clan\ClanInterface;
 use eduslim\interfaces\domain\clan\ClanManagerInterface;
+use eduslim\interfaces\domain\maps\MapsManagerInterface;
+use eduslim\interfaces\domain\sessions\SessionManagerInterface;
 use eduslim\interfaces\domain\user\UserInterface;
 use eduslim\interfaces\domain\user\UserManagerInterface;
 
@@ -16,20 +19,27 @@ class ClanService
     protected $methods = [
             "addUser",
             "removeUser",
-            "sessionCreate",
-
+            "createSession",
+            "addClan"
         ];
 
     /** @var ClanManagerInterface  */
-    public $clanManager;
+    protected $clanManager;
 
     /** @var UserManagerInterface  */
-    public $userManager;
+    protected $userManager;
 
-    public function __construct(ClanManagerInterface $clanManager, UserManagerInterface $userManager)
+    /** @var MapsManagerInterface  */
+    //protected $mapsManager;
+
+    /** @var SessionManagerInterface */
+    protected $sessionManager;
+
+    public function __construct(ClanManagerInterface $clanManager, UserManagerInterface $userManager, SessionManagerInterface $sessionManager)
     {
         $this->userManager = $userManager;
         $this->clanManager = $clanManager;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
@@ -55,11 +65,6 @@ class ClanService
      */
     protected function UserTest( ?UserInterface $user )
     {
-        /*
-        if(empty($user)) return "No user";
-        if(empty($user->getId())) return "User has no id";
-        return true;*/
-
         if(empty($user)) {
             throw new ServiceException("No such user");
         }
@@ -83,7 +88,9 @@ class ClanService
 
         $this->UserTest($user);
 
-        //if(!empty($user->getClanId())) return "User is already in clan";
+        if(!empty($user->getClanId())) {
+            throw new ServiceException("User is already in clan");
+        }
 
         $user->setClanId($clan->getId());
 
@@ -119,8 +126,51 @@ class ClanService
         return true;
     }
 
+    /**
+     * @throws ServiceException
+     */
+    protected function createSession( ClanInterface $clan, array $args)
+    {
+        $session = new Session();
 
+        dump($args);
 
+        if( empty($args["map"]))
+            throw new ServiceException("Map is wrong/No such map");
+
+        if( strlen($args["sessionName"]) < 3 )
+            throw new ServiceException("Session name is too short");
+
+        $session->setName($args['sessionName']);
+        $session->setMap($args['map']);
+        $session->setMapStateR($session->getMap()->getMapR());
+
+        if( !$this->sessionManager->save($session) )
+            throw new ServiceException("Database error, couldnt save session");
+
+        $this->sessionManager->addClan($session, $clan);
+
+        return true;
+    }
+
+    /** @throws ServiceException */
+    protected function AddClan(ClanInterface $clan, array $args)
+    {
+        if(!$session = $this->sessionManager->findByName($args['sessionName'])){
+            throw new ServiceException("No such session");
+        }
+
+        if(!$aClan = $this->clanManager->findByName($args['addClanName'])){
+            throw new ServiceException("No such clan");
+        }
+
+        // Actual Adding
+        if(!$this->sessionManager->addClan($session, $aClan)){
+            throw new ServiceException("Database error : couldnt add clan to a session");
+        }
+
+        return true;
+    }
 
 
 

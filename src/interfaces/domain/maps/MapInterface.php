@@ -8,6 +8,8 @@
 
 namespace eduslim\interfaces\domain\maps;
 
+use eduslim\interfaces\domain\user\UserInterface;
+
 interface MapInterface
 {
 
@@ -16,11 +18,12 @@ interface MapInterface
 
     public function setName(string $name);
 
-    public function setMap(string $map);
+    public function setMapR(string $map);
 
     // Setting the creator of the map (id)
-    public function setCreator(int $user);
+    public function setCreatorId(int $userId);
 
+    public function setCreator(UserInterface $user);
 
     // Getters
 
@@ -30,10 +33,12 @@ interface MapInterface
     /** @return string */
     public function getName():?string;
 
-    /** @return string (JSON */
-    public function getMap():?string;
+    /** @return string */
+    public function getMapR():?string;
 
     /** @return int */
-    public function getCreator():?int;
+    public function getCreatorId():?int;
+
+    public function getCreator():?UserInterface;
 
 }
