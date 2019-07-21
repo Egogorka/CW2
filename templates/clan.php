@@ -33,7 +33,7 @@
             <?php
             /** @var \eduslim\interfaces\domain\sessions\SessionInterface $session */
             foreach ($sessions as $session){
-                echo "<li>".$session->getName()."</li>";
+                echo "<li><a href='/session/".$session->getId()."'>".$session->getName()."</a></li>";
             }
 
             ?>

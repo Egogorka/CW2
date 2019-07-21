@@ -4,9 +4,11 @@
 namespace eduslim\domain\mapstate;
 
 
-class Cell
+use eduslim\interfaces\domain\mapstate\CellInterface;
+
+class Cell implements CellInterface
 {
-    const STRUCTURES = [
+    /*const STRUCTURES = [
 
         0  => 'noStruct',
         7  => 'base',
@@ -42,7 +44,7 @@ class Cell
         'cyan' => 5,
         'blue' => 6,
 
-        ];
+        ];*/
 
     protected $structure;
     protected $color;
@@ -61,15 +63,15 @@ class Cell
         $this->alias = $a;
     }
 
-    public function getStructure(){
+    public function getStructure():?int {
         return $this->structure;
     }
 
-    public function getColor(){
+    public function getColor():?int {
         return $this->color;
     }
 
-    public function getCodedPair(){
+    public function getCodedPair():?string {
         return ($this->color).";".($this->structure);
     }
 

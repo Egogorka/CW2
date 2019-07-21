@@ -6,7 +6,7 @@
  * Time: 14:49
  */
 
-namespace eduslim\domain\session;
+namespace eduslim\domain\mapstate;
 
 
 use eduslim\domain\mapstate\Cell;
@@ -77,10 +77,10 @@ class MapState implements MapStateInterface
 
         if($cell->getStructure() != CellInterface::STRUCTURES['noStruct']){
 
-            if(!is_array($this->structures[$cell->getColor()]))
+            if(!key_exists($cell->getColor() ,$this->structures))
                 $this->structures[$cell->getColor()] = array();
 
-            if(!is_array($this->structures[$cell->getColor()][$cell->getStructure()]))
+            if(!key_exists($cell->getStructure() ,$this->structures[$cell->getColor()]))
                 $this->structures[$cell->getColor()][$cell->getStructure()] = array();
 
             $this->structures[$cell->getColor()][$cell->getStructure()][] = $point;

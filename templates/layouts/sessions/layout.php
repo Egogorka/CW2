@@ -6,13 +6,22 @@
 
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/session.css">
+
+    <!--<script src="/dist/require.js"></script>-->
+
 </head>
 
 <body>
 
-    <?=$this->section("content")?>
+    <header style="z-index: 200">
+        <?=$this->insert("layouts/sessions/header")?>
+    </header>
 
-    <footer style=""> Egogorka's Mastership </footer>
+    <div style="z-index: 1">
+    <?=$this->section("content")?>
+    </div>
+
+    <footer style="z-index: 200;"> Egogorka's Mastership </footer>
 
 </body>
 

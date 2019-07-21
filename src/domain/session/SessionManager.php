@@ -11,6 +11,7 @@ use eduslim\interfaces\domain\maps\MapInterface;
 use eduslim\interfaces\domain\sessions\SessionInterface;
 use eduslim\interfaces\domain\sessions\SessionManagerInterface;
 use Psr\Log\LoggerInterface;
+use eduslim\domain\mapstate\MapState;
 
 class SessionManager implements SessionManagerInterface
 {
@@ -46,7 +47,7 @@ class SessionManager implements SessionManagerInterface
 
     public function removeClan(SessionInterface $session, ClanInterface $clan)
     {
-        $this->removeClan($session, $clan);
+        $this->sessionDao->removeClan($session, $clan);
     }
 
     public function findById(int $id): ?SessionInterface

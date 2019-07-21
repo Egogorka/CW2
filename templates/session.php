@@ -1,9 +1,18 @@
-<header>
-    <?=$this->layout("layouts/sessions/layout")?>
 
-    <!-- There must be a map -->
+<?php
+/**
+ * @var \eduslim\interfaces\domain\sessions\SessionInterface $session
+ */
+?>
 
-    <div id="MapBoard"> </div>
+<?=$this->layout("layouts/sessions/layout")?>
 
-    <?=$this->insert("layouts/sessions/header")?>
-</header>
+
+<!-- There must be a map -->
+
+<div id="MapBoard"> </div>
+
+<script> var mapRaw ='<?=$session->getMapStateR()?>'; </script>
+
+<script src="/dist/map/bundle.js"></script>
+

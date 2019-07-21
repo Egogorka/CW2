@@ -38,7 +38,9 @@
     <?=$this->section('content')?>
 
     <center>
-    <a style="background-color: #c1c1c1; display: inline-block; padding: 10px;" href="javascript:history.back()">Go Back</a>
+        <a style="background-color: #c1c1c1; display: inline-block; padding: 10px;" href="javascript:history.back()">Go Back</a>
+
+        <a style="background-color: #c1c1c1; display: inline-block; padding: 10px;" href="/">Main Page</a>
     </center>
 
 </body>

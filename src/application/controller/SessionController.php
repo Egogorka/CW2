@@ -36,6 +36,10 @@ class SessionController extends Controller
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $user = $this->takeUser($request);
+
+        $session = $this->sessionManager->findById($args['sessionId']);
+        $this->renderer->addData(['session' => $session]);
+
         $this->renderer->render('session', $args);
     }
 }
