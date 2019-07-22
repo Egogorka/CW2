@@ -31,8 +31,8 @@
 
     Clan::$db = User::$db = $db;
 
-    $user = (User::find('id', $_SESSION['id']  ?? null, true));
-    $clan = (Clan::find('id', $_SESSION['clan_id'] ?? null, true));
+    //$user = (User::find('id', $_SESSION['id']  ?? null, true));
+    //$clan = (Clan::find('id', $_SESSION['clan_id'] ?? null, true));
 
     ?>
 

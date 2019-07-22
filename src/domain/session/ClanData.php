@@ -11,9 +11,13 @@ class ClanData
 
 
 
+    /** @var array */
+    protected $plannedAttacks = [];
 
     /** @var int */
-    protected $budget;
+    protected $budget = 0;
+
+
 
     /** @throws BaseException */
     public function __construct(string $json){

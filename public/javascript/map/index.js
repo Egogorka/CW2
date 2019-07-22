@@ -394,7 +394,10 @@
 //         }
 //     }
 
+import Point from "./Point.js";
 import MapView from "./MapView.js";
+import CellView from "./CellView.js";
+
 import MapState from "./MapState.js";
 
 //let mapRaw = '32|31;2;7"33|29;0;0|30;0;0|31;0;8|32;0;0|33;0;0"34|31;0;0"35|31;0;0"36|30;0;0|32;0;0"37|30;0;0|32;0;0"';
@@ -406,6 +409,8 @@ let view = new MapView(document.getElementById("MapBoard"), {
     offsetY : -map.MapParams.minY*(MapView.OPTIONS.hexHeight - MapView.OPTIONS.hexMiddleSection) + 100,
 });
 
+let cellV = new CellView(view, {});
+
 console.log("MapParams");
 console.log(map.MapParams);
 
@@ -415,5 +420,13 @@ console.log(view.options);
 console.log(map.map);
 
 map.forEachCell(function (cell, point) {
-    view.appendHex(cell, point);
+    cellV.appendHex(cell, point);
+});
+
+view.board.addEventListener("click", function (e) {
+
+    let pt = new Point(e.pageX, e.pageY);
+    //alert(pt.x + " " + pt.y);
+    console.log(view.pixelToPoint(pt));
+
 });

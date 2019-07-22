@@ -415,6 +415,9 @@ function hex_click(e) {
     if(e.which == 2) return false;
 
     thex = Pixel_to_rOddOffset( e.pageX , e.pageY , 42.5 );
+
+    alert(thex.x +" "+ thex.y+"|"+typehex);
+
 	output = roffset_to_cube(ODD, OffsetCoord(thex.x, thex.y));
     
     if(typehex) Hex_Spawn_mapeditor(output, thex, typehex);
@@ -500,7 +503,7 @@ function Pixel_to_rOddOffset ( mouse_x , mouse_y , size ) {
 
         hex_y = (size/2*3) - Math.round((size/2*3)*(ms_y / (size/2*3) - thex_y)); 
 
-            if ( ( (2*(hex_y) - (hex_x)) < size) && ( ( 2*(hex_y) + (hex_x) ) < size*3 ) ){;
+            if ( ( (2*(hex_y) - (hex_x)) < size) && ( ( 2*(hex_y) + (hex_x) ) < size*3 ) ){
                 thex_y++;
             } else 
             if ( hex_x < size){

@@ -6,20 +6,15 @@ export default class MapView {
     static get OPTIONS() {
         return {
 
-            imageRoot : "/images/mapStuff",
-
+            imageRoot : "/image/mapStuff/",
             // Considering the "px"
             hexWidth : 60,
             hexHeight : 60,
 
             hexMiddleSection : 60/4,
 
-            structureWidth : 50,
-            structureHeight : 50,
-
             offsetX : 0,
             offsetY : 0,
-
         };
     }
 
@@ -32,7 +27,7 @@ export default class MapView {
 
     /**
      * @param {Node} MapBoardElement
-     * @param {Array} options
+     * @param {Object} options
      */
     constructor( MapBoardElement , options ){
 
@@ -58,6 +53,7 @@ export default class MapView {
     }
 
     // Reverse of PositionNode function, i would say
+    // Most crutch'y thing
     /**
      * @return {Point}
      * @param {Point} pixelPoint
@@ -68,14 +64,21 @@ export default class MapView {
         let height = MapView.OPTIONS.hexHeight;
         let middle = MapView.OPTIONS.hexMiddleSection;
 
-        let offset = Point(this.options.offsetX, this.options.offsetY);
+        let scale = new Point(width, (height - middle));
+        let offset = new Point(this.options.offsetX, this.options.offsetY);
+
 
         let pt = Point.sub(pixelPoint, offset);
 
-        let scale = Point(width, (height - middle));
+        let ptFloat = Point.scaleDown(pt ,scale);
+        //let ptInt   = Point.pointFunction(ptFloat, Math.floor);
+        let ptInt = Point.pointFloor(ptFloat);
 
-        let ptInt = Point.scaleDown(pt ,scale);
-        ptInt = Point.pointFunction(pt, Math.floor);
+        if ((ptInt.y & 1) === 1){ // Moving the row to the side.
+            ptFloat.x -= 0.5;
+            pt = Point.scaleUp(ptFloat, scale);
+            ptInt = Point.pointFloor(ptFloat);
+        }
 
         let ptRemainder = Point.sub( pt , Point.scaleUp(ptInt, scale) );
 
@@ -84,12 +87,15 @@ export default class MapView {
         let x = ptRemainder.x;
         let y = ptRemainder.y;
 
-        if( 2*middle/width*x + y < middle ) {
-
+        if( y < -2*middle/width*x + middle ) {
+            ptInt.shiftPosition(Point.DIRECTIONS["ul"]);
         }
 
+        if( y <  2*middle/width*x - middle ) {
+            ptInt.shiftPosition(Point.DIRECTIONS["ur"]);
+        }
 
-
+        return ptInt;
     }
 
     /**
@@ -98,9 +104,9 @@ export default class MapView {
      * @param {Point} point // coordinates
      * @param {Point} offsetPoint // px
      */
-    positionNode( node , point , offsetPoint ){
+    addNode( node , point , offsetPoint ){
 
-        if( offsetPoint === undefined ) offsetPoint = Point(0,0);
+        if( offsetPoint === undefined ) offsetPoint = new Point(0,0);
 
         let x = this.options.offsetX; //+ this.board.clientWidth/2;
         let y = this.options.offsetY; //+ this.board.clientHeight/2;
@@ -113,88 +119,15 @@ export default class MapView {
         node.style.marginLeft = x + offsetPoint.x + "px";
         node.style.marginTop  = y + offsetPoint.y + "px";
 
-    }
+        this.board.appendChild(node);
 
-    /**
-     * @param {Cell} cell
-     * @param {Point} point
-     */
-    appendHex( cell , point ){
-
-        let hexagon = document.createElement("img");
-        let structure = document.createElement("img");
-
-        hexagon.src = MapView.IMAGE_TABLE[cell.color];
-        structure.src = MapView.IMAGE_TABLE[cell.structure];
-
-        hexagon.style.width = this.options.hexWidth + "px";
-        hexagon.style.height = this.options.hexHeight + "px";
-        hexagon.id = point.x + ";" + point.y + ";H;" + cell.color;
-        hexagon.classList.add("hexagon");
-
-        structure.style.height = this.options.structureHeight + "px";
-        structure.style.width = this.options.structureWidth + "px";
-        structure.id = point.x + ";" + point.y + ";S;" + cell.structure;
-        structure.classList.add("structure");
-
-        let structureOffset = Point(
-            (this.options.hexWidth - this.options.structureWidth)/2,
-            (this.options.hexHeight - this.options.structureHeight)/2
-        );
-
-        this.positionNode(hexagon, point);
-        this.positionNode(structure, point, structureOffset);
-
-        this.board.appendChild(hexagon);
-        if( cell.structure !== Cell.STRUCTURES.noStruct)
-            this.board.appendChild(structure);
     }
 
     /**
      *
+     * @param {Node} node
      */
-    removeHex( point ){
-
+    removeNode( node ){
+        this.board.removeChild(node);
     }
-
-
 }
-
-MapView.IMAGE_TABLE = {};
-
-let STRUCTURES = Cell.STRUCTURES;
-let COLORS = Cell.COLORS;
-let IMAGE_TABLE = MapView.IMAGE_TABLE;
-
-let imageRoot = MapView.OPTIONS.imageRoot;
-
-IMAGE_TABLE[STRUCTURES.base] = imageRoot+"/structures/base.png";
-IMAGE_TABLE[STRUCTURES.harvester] = imageRoot+"/structures/harvester.png";
-IMAGE_TABLE[STRUCTURES.radar] = imageRoot+"/structures/radar.png";
-IMAGE_TABLE[STRUCTURES.shipFactory] = imageRoot+"/structures/shipfactory.png";
-
-IMAGE_TABLE[COLORS.neutral] = imageRoot+"/hexagons/neutral.png";
-IMAGE_TABLE[COLORS.red] = imageRoot+"/hexagons/red.png";
-IMAGE_TABLE[COLORS.yellow] = imageRoot+"/hexagons/yellow.png";
-IMAGE_TABLE[COLORS.green] = imageRoot+"/hexagons/green.png";
-IMAGE_TABLE[COLORS.cyan] = imageRoot+"/hexagons/cyan.png";
-IMAGE_TABLE[COLORS.blue] = imageRoot+"/hexagons/blue.png";
-IMAGE_TABLE[COLORS.purple] = imageRoot+"/hexagons/purple.png";
-
-/*
-    neutral_alias: 'hexagons/empty.png',
-
-    purple_alias : 'hexagons/hxgonPurple.png',
-    red_alias    : 'hexagons/hxgonRed.png',
-    yellow_alias : 'hexagons/hxgonYellow.png',
-    green_alias  : 'hexagons/hxgonGreen.png',
-    cyan_alias   : 'hexagons/hxgonCyan.png',
-    blue_alias   : 'hexagons/hxgonBlue.png',
-
-// Структуры
-
-    base         : 'upgrades/base_1.png',
-    harvester    : 'upgrades/harvester_1.png',
-    radar        : 'upgrades/radar_1.png',
-    shipfactory  : 'upgrades/shipfactory_1.png'
-    */

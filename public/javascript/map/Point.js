@@ -18,7 +18,7 @@ export default class Point {
     static add( p1 , p2 ){
         let x = p1.x + p2.x;
         let y = p1.y + p2.y;
-        return Point(x,y);
+        return new Point(x,y);
     }
 
     /**
@@ -29,7 +29,7 @@ export default class Point {
     static sub( p1, p2 ){
         let x = p1.x - p2.x;
         let y = p1.y - p2.y;
-        return Point(x,y);
+        return new Point(x,y);
     }
 
     /**
@@ -40,7 +40,7 @@ export default class Point {
     static scaleUp( p1 , p2 ){
         let x = p1.x * p2.x;
         let y = p1.y * p2.y;
-        return Point(x,y);
+        return new Point(x,y);
     }
 
     /**
@@ -51,7 +51,7 @@ export default class Point {
     static scaleDown( p1 , p2 ){
         let x = p1.x / p2.x;
         let y = p1.y / p2.y;
-        return Point(x,y);
+        return new Point(x,y);
     }
 
     /**
@@ -62,46 +62,47 @@ export default class Point {
     static mulScalar( p , s ){
         let x = p.x * s;
         let y = p.y * s;
-        return Point(x,y);
+        return new Point(x,y);
     }
 
     /**
      * @param {Point} p
-     * @param {Function} func
      */
-    static pointFunction( p , func ){
-        p.x = func(p.x);
-        p.y = func(p.y);
+    static pointFloor( p ){
+        let x = Math.floor(p.x);
+        // noinspection JSSuspiciousNameCombination
+        let y = Math.floor(p.y);
+        return new Point(x, y);
     }
     
     shiftPosition( dir ){
         switch ( dir ){
             case Point.DIRECTIONS['rr']:
-                this.posX++;
+                this.x++;
                 break;
 
             case Point.DIRECTIONS['ll']:
-                this.posX--;
+                this.x--;
                 break;
 
             case Point.DIRECTIONS['ur']:
-                this.posX += (this.posY % 2);
-                this.posY--;
+                this.x += (this.y % 2);
+                this.y--;
                 break;
 
             case Point.DIRECTIONS['ul']:
-                this.posX -= ((this.posY+1) % 2);
-                this.posY--;
+                this.x -= ((this.y+1) % 2);
+                this.y--;
                 break;
 
             case Point.DIRECTIONS['dr']:
-                this.posX += (this.posY % 2);
-                this.posY++;
+                this.x += (this.y % 2);
+                this.y++;
                 break;
 
             case Point.DIRECTIONS['dl']:
-                this.posX -= ((this.posY+1) % 2);
-                this.posY++;
+                this.x -= ((this.y+1) % 2);
+                this.y++;
                 break;
         }
     }

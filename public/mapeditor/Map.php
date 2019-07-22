@@ -64,7 +64,7 @@ use User\User;
         {
             $db = $this->db;
 
-            $sql = 'INSERT INTO maps ( name, map, creator ) VALUES (?s, ?s, ?i)';
+            $sql = 'INSERT INTO maps ( name, mapR, creatorId ) VALUES (?s, ?s, ?i)';
             $res = $db->query($sql, $this->name, $this->mapStr, $this->creator->getId());
             if (!$res) {
                 return new Data([

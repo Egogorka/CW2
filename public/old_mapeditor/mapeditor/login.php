@@ -44,7 +44,7 @@ function SaveMap($map , $ownerid, $mapname)
 	$MapArr = ConvertStringToMap($map);
 	$baseArr = FindBases($MapArr);
 
-	$sql = mysql_query("INSERT INTO `maps` (`id`, `map`, `name`, `owner`, `bases`, `color`, `dateofcreation`) 
+	$sql = mysql_query("INSERT INTO `maps` (`id`, mapR, `name`, `owner`, `bases`, `color`, `dateofcreation`) 
 		VALUES (NULL, '".$map."', '".$mapname."', '".$ownerid."', '".$baseArr[0]."', '".$baseArr[1]."', '".time()."')");
 	if(!$sql) return mysql_errno()." ".mysql_error() ;
 	$sql = mysql_query("SELECT * FROM `maps` ORDER BY `id` DESC ");
