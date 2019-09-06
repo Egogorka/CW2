@@ -5,7 +5,10 @@ namespace eduslim\domain\clan;
 
 use eduslim\domain\ServiceException;
 
+use eduslim\domain\session\ClanData;
 use eduslim\domain\session\Session;
+use eduslim\infrastructure\Color\RGB;
+
 use eduslim\interfaces\domain\clan\ClanInterface;
 use eduslim\interfaces\domain\clan\ClanManagerInterface;
 use eduslim\interfaces\domain\maps\MapsManagerInterface;
@@ -133,13 +136,18 @@ class ClanService
     {
         $session = new Session();
 
-        dump($args);
+        //dump($args);
 
         if( empty($args["map"]))
             throw new ServiceException("Map is wrong/No such map");
 
         if( strlen($args["sessionName"]) < 3 )
             throw new ServiceException("Session name is too short");
+
+        // There is a problem.
+        // I can test if there is a clan color, but if there would be more?
+        if( $args['clanColor'] === null)
+            throw new ServiceException("Clan color is unset");
 
         $session->setName($args['sessionName']);
         $session->setMap($args['map']);
@@ -148,7 +156,16 @@ class ClanService
         if( !$this->sessionManager->save($session) )
             throw new ServiceException("Database error, couldnt save session");
 
-        $this->sessionManager->addClan($session, $clan);
+        $rgb = new RGB();
+        $rgb->getFromHEX($args['clanColor']);
+        $hsv = $rgb->getHSV();
+        $colorIndex = (round($hsv->getHue() / 60) % 6) + 1;
+
+        $data = new ClanData();
+        $data->setProp("color",$colorIndex);
+
+        if($this->sessionManager->addClan($session, $clan) && $this->sessionManager->setClanData($session, $clan, $data))
+            throw new ServiceException("Database error, couldnt add clan to the session");
 
         return true;
     }
@@ -156,18 +173,33 @@ class ClanService
     /** @throws ServiceException */
     protected function AddClan(ClanInterface $clan, array $args)
     {
-        if(!$session = $this->sessionManager->findByName($args['sessionName'])){
+        if(!$session = $this->sessionManager->findByName($args['sessionName']))
             throw new ServiceException("No such session");
-        }
 
-        if(!$aClan = $this->clanManager->findByName($args['addClanName'])){
+        if(!$addClan = $args['addClan'])
             throw new ServiceException("No such clan");
-        }
+
+        //dump($addClan);
+
+        if($args['clanColor'] === null)
+            throw new ServiceException("Clan color is not set");
+
 
         // Actual Adding
-        if(!$this->sessionManager->addClan($session, $aClan)){
+        if(!$this->sessionManager->addClan($session, $addClan))
             throw new ServiceException("Database error : couldnt add clan to a session");
-        }
+
+        //Color identification
+        $rgb = new RGB();
+        $rgb->getFromHEX($args['clanColor']);
+        $hsv = $rgb->getHSV();
+        $colorIndex = (round($hsv->getHue() / 60) % 6) + 1;
+
+        $data = new ClanData();
+        $data->setProp("color",$colorIndex);
+
+        if(!$this->sessionManager->setClanData($session, $addClan, $data))
+            throw new ServiceException("Database error : cant assign data to the clan in a session");
 
         return true;
     }

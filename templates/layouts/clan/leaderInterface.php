@@ -31,6 +31,9 @@
             <label>Name : <input type="text" name="sessionName"></label><br>
             <label>Map name : <input type="text" name="mapName"></label><br>
             <label>Action name : <input type="text" name="actionName"></label><br>
+            <hr>
+            <label>Clan Color : <input type="color" name="clanColor"></label><br>
+
             <input type="submit" value="Add!">
         </form>
     </li>
@@ -40,6 +43,7 @@
         <form action="/clan/<?=$clan->getId()?>/leader/addClan/" method="get">
             <label>Clan name : <input type="text" name="addClanName"></label><br>
             <label>Session name : <input type="text" name="sessionName"></label><br>
+            <label>Clan Color : <input type="color" name="clanColor"></label><br>
             <input type="submit" value="Add!">
         </form>
     </li>

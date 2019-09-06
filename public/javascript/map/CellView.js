@@ -1,6 +1,9 @@
 import Cell from "./Cell";
 import MapView from  "./MapView";
 import Point from "./Point";
+import OffsetCoordinate from "./HexCoordinate"
+
+import Hex from "Root/map/Hex";
 
 export default class CellView {
 
@@ -50,10 +53,12 @@ export default class CellView {
     }
 
     /**
-     * @param {Cell} cell
-     * @param {Point} point
+     * @param {Hex} hex
      */
-    appendHex( cell , point ){
+    appendHex( hex ){
+
+        let cell = hex.cell;
+        let point = hex.coordinate;
 
         let hexagon = document.createElement("img");
         let structure = document.createElement("img");
@@ -92,13 +97,9 @@ export default class CellView {
           let hex = document.getElementById(hexId);
           let str = document.getElementById(strId);
 
-          if (hex) {
-              this.mapView.removeNode(hex);
-          }
+          if (hex) this.mapView.removeNode(hex);
 
-          if (str) {
-              this.mapView.removeNode(str);
-          }
+          if (str) this.mapView.removeNode(str);
     }
 }
 

@@ -69,7 +69,7 @@ class SessionDao extends Dao
     public function removeClan( SessionInterface $session, ClanInterface $clan)
     {
         try {
-            $this->connection->perform('DELETE * FROM sessions_clans WHERE (sessionId=:sessionId, clanId=:clanId)', [
+            $this->connection->perform('DELETE FROM sessions_clans WHERE (sessionId=:sessionId, clanId=:clanId)', [
                 'clanId' => $clan->getId(),
                 'sessionId' => $session->getId()
             ]);
@@ -85,7 +85,7 @@ class SessionDao extends Dao
     public function setClanData( SessionInterface $session, ClanInterface $clan, ClanData $data)
     {
         try {
-            $this->connection->perform('UPDATE sessions_clans SET clanInfo=:clanData WHERE (sessionId=:sessionId, clanId=:clanId)',
+            $this->connection->perform('UPDATE sessions_clans SET clanInfo=:clanData WHERE sessionId=:sessionId AND clanId=:clanId',
                 [
                     'clanId' => $clan->getId(),
                     'sessionId' => $session->getId(),
@@ -108,14 +108,9 @@ class SessionDao extends Dao
                     'sessionId' => $session->getId()
                 ]);
 
-        try {
-            return new ClanData($result['clanInfo']);
-        } catch (BaseException $e){
-            $this->logger->error($e->getMessage(), [
-                'trace' => $e->getTrace(),
-            ]);
-            return null;
-        }
+
+        return new ClanData($result['clanInfo']);
+
     }
 
     public function save( SessionInterface $session ):bool

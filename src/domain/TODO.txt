@@ -13,10 +13,53 @@
         [X] MapStateInterface
     [ ] MapStateManager (if it needs one)
 
+// HAHA FRONTEND+BACKEND
+
+[X] clan color assign on creation // CANNOT WORK WITHOUT THAT (CWWT)
+    [X] view-part
+    [X] server-part
+
+[X] rgb/hsv algorithm // neat addition
+    [X] understand formulas/steal algorithm
+    [X] implement functions rgb2hsv and hsv2rgb
+
+[X] clan color assign on addition
+    [X] view-part
+    [X] server-part
+
+[ ] user addition for an attack // CWWT
+
+    [ ] think about the design, mby window with form?
+    [ ] also implement that design
+
+[Х] HexCoordinate rework // CWWT(mby?)
+
+    [Х] think if I really need that (but Point class both for points(vectors) and hexes? bruh..)
+    [Х] and why the fuck offset coordinates involve +1/2
+
+    [Х] AxialCoordinate
+        [Х] itself
+        [Х] methods (some of them, like distance)
+
+    [Х] OffsetCoordinate
+        [Х] find the reason of it's existence
+
+[ ] PLANS
+    [X] plan model
+        [X] attack model
+
+    [X] plan manager
+        [X] add plan, remove plan, bla-blablalssleepb
+
+    [ ] plan view
+        [ ] attack-view
+
+
+
 // Actions
     [ ] Actions interface
     [ ] Actions Manager interface
 
 // Sessions
-    [ ] Session Creation
+    [~] Session Creation
 

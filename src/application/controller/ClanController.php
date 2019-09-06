@@ -88,11 +88,15 @@ class ClanController extends Controller
                     "action" => null,
 
                     "addClan" => (!empty($get['addClanName'])) ? $this->clansManager->findByName($get['addClanName']) : null,
+
+                    "clanColor" => (!empty($get['clanColor'])) ? $get['clanColor'] : null,
                 )
             );
+            $args['error'] = "Success";
         } catch (ServiceException $e){
             $args['error'] = $e->getMessage();
         }
+
 
         return $args;
 

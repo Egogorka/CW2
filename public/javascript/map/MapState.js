@@ -1,8 +1,10 @@
 import Point from './Point';
 import Cell from './Cell';
 
-export default class MapState {
+import Hex from './Hex';
+import {OffsetCoordinate} from "Root/map/HexCoordinate";
 
+export default class MapState {
 
     /**
      * @param {string} mapRaw
@@ -40,22 +42,26 @@ export default class MapState {
                 let y = Number(mapDec3[0]);
 
                 let cell = this.map[x][y] = new Cell(Number(mapDec3[1]), Number(mapDec3[2]));
-                let point = new Point(x,y);
+                let coordinate = new OffsetCoordinate(x,y);
 
-                this.checkCell( cell , point );
+                let hex = new Hex(cell, coordinate);
+
+                this.checkCell( hex );
             }
         }
     }
 
     /**
-     * @param {Cell} cell
-     * @param {Point} point
+     * @param {Hex} hex
      */
-    checkCell( cell, point ) {
+    checkCell( hex ) {
         let params = this.MapParams;
 
+        let cell = hex.cell;
+        let coordinate = hex.coordinate;
+
         if (cell.structure === Cell.STRUCTURES['base']) {
-            params.bases.push({cell: cell, position: point});
+            params.bases.push(hex);
         }
 
         if (cell.structure !== Cell.STRUCTURES['noStruct']) {
@@ -66,18 +72,18 @@ export default class MapState {
             if (params.structures[cell.color][cell.structure] === undefined)
                 params.structures[cell.color][cell.structure] = [];
 
-            params.structures[cell.color][cell.structure].push(point);
+            params.structures[cell.color][cell.structure].push(coordinate);
         }
 
         if (params.minX === null){
-            params.minX = params.maxX = point.x;
-            params.minY = params.maxY = point.y;
+            params.minX = params.maxX = coordinate.x;
+            params.minY = params.maxY = coordinate.y;
         } else {
-            if( point.x > params.maxX ) params.maxX = point.x;
-            if( point.x < params.minX ) params.minX = point.x;
+            if( coordinate.x > params.maxX ) params.maxX = coordinate.x;
+            if( coordinate.x < params.minX ) params.minX = coordinate.x;
 
-            if( point.y > params.maxY ) params.maxY = point.y;
-            if( point.y < params.minY ) params.minY = point.y;
+            if( coordinate.y > params.maxY ) params.maxY = coordinate.y;
+            if( coordinate.y < params.minY ) params.minY = coordinate.y;
         }
     }
 
@@ -85,35 +91,34 @@ export default class MapState {
      * @param {Cell} cell
      * @return {Array}
      */
-    getArrayOfCell( cell ){
+    getArrayOfHex( cell ){
         return this.MapParams.structures[cell.color][cell.structure];
     }
 
-    getAmountOfCell( cell ){
-        return this.getArrayOfCell(cell).length;
+    getAmountOfHex( cell ){
+        return this.getArrayOfHex(cell).length;
     }
 
     /**
-     * @param {Point} point
-     * @return {Cell}
+     * @param {OffsetCoordinate} coordinate
+     * @return {Hex}
      */
-    getCell( point ) {
-        return this.map[point.x][point.y];
+    getHex( coordinate ) {
+        return new Hex(this.map[coordinate.x][coordinate.y], coordinate );
     }
 
     /**
-     * @param {Cell}  cell
-     * @param {Point} point
+     * @param {Hex} hex
      */
-    setCell( cell, point ) {
-        this.map[point.x][point.y] = cell;
+    setHex( hex ) {
+        let coordinate = hex.coordinate;
+        this.map[coordinate.x][coordinate.y] = hex.cell;
     }
 
     /**
      * Callback description
      * @callback thatCallback
-     * @param {Cell}
-     * @param {Point}
+     * @param {Hex} hex
      */
 
     /**
@@ -124,11 +129,10 @@ export default class MapState {
         let that = this;
         that.map.forEach( function ( row, x ) {
             row.forEach( function ( cell, y ) {
-                func( cell, new Point(x,y));
+                func( new Hex( cell , new OffsetCoordinate(x,y) ) );
             });
         });
     }
-
 
     /**
      * @return {string}
@@ -150,20 +154,16 @@ export default class MapState {
                 savemap = savemap + i + savemap_y + "\"";
         });
         return savemap;*/
+        // mapRaw : {x|y;type;type|y;type;type|...|y;type;type"x|y;type;...;type" }
 
         let out = "";
-
-        // mapRaw : {x|y;type;type|y;type;type|...|y;type;type"x|y;type;...;type" }
         this.map.forEach( function ( row, x ) {
-
             out += x;
             row.forEach( function ( cell, y ) {
                 out += "|" + y + ";";
-
                 out += cell.encode();
             });
             out += "\"";
-
         });
 
         return out;

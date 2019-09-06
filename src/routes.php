@@ -3,8 +3,11 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-// Routes
+//// Routes
 
+// Testing
+
+$app->get('/test[.php]', \eduslim\application\controller\DemoController::class);
 
 // Main
 $app->get('/[index.php]', \eduslim\application\controller\IntroController::class);

@@ -18,11 +18,12 @@
             CLAN
         </a>
 
-        <a class="nav" href="#">
+        <a class="nav" id="nav-info">
             INFO
         </a>
 
-        <a class="nav" href="#">
+
+        <a class="nav" id="nav-plans">
             PLANS
         </a>
     </div>
@@ -30,3 +31,5 @@
     <?=$this->insert("layouts/userbar")?>
 
 </div>
+
+<?=$this->insert("layouts/sessions/plans")?>

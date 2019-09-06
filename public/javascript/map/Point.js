@@ -1,4 +1,9 @@
 
+// Stupid % operator
+const modEx = function (x,y) {
+    return x - Math.floor(x/y)*y;
+};
+
 export default class Point {
 
     /**
@@ -8,6 +13,22 @@ export default class Point {
     constructor(x, y){
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * @param {Point} point
+     * @return {Point}
+     */
+    static clone( point ){
+        return new Point(point.x, point.y);
+    }
+
+    toString() {
+        return this.x+":"+this.y;
+    }
+
+    static equal( p1, p2 ){
+        return (p1.x === p2.x)&&(p1.y === p2.y);
     }
 
     /**
@@ -86,25 +107,64 @@ export default class Point {
                 break;
 
             case Point.DIRECTIONS['ur']:
-                this.x += (this.y % 2);
+                this.x += modEx(this.y,2);
                 this.y--;
                 break;
 
             case Point.DIRECTIONS['ul']:
-                this.x -= ((this.y+1) % 2);
+                this.x -= modEx(this.y+1,2);
                 this.y--;
                 break;
 
             case Point.DIRECTIONS['dr']:
-                this.x += (this.y % 2);
+                this.x += modEx(this.y, 2);
                 this.y++;
                 break;
 
             case Point.DIRECTIONS['dl']:
-                this.x -= ((this.y+1) % 2);
+                this.x -= modEx(this.y+1,2);
                 this.y++;
                 break;
         }
+    }
+
+    /**
+     * @param {Point} pt1
+     * @param {Point} pt2
+     * @return {boolean}
+     */
+    static isNeighbor( pt1, pt2 ){
+        try {
+            Point.getDirection( pt1 , pt2 );
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param {Point} ptFrom
+     * @param {Point} ptTo
+     * @return {number}
+     */
+    static getDirection( ptFrom , ptTo ){
+        // Test, if is a neighbor
+        let offset = Point.sub(ptTo, ptFrom);
+
+        if( (Math.abs(offset.x) > 1) || (Math.abs(offset.y) > 1) ) throw new Error("Not a neighbor");
+
+        for (let i = 0; i < 6; i++) {
+            offset.shiftPosition(i);
+
+            if ((offset.x === 0) && (offset.y === 0)) return i;
+            offset.shiftPosition(Point.oppositeDirection(i));
+        }
+
+        throw new Error("Not a neighbor");
+    }
+
+    static oppositeDirection( dir ){
+        return (3+dir)%6;
     }
 }
 

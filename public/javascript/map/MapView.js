@@ -1,12 +1,14 @@
 import Cell from "./Cell";
 import Point from "./Point";
 
+import {OffsetCoordinate} from "Root/map/HexCoordinate";
+
 export default class MapView {
 
     static get OPTIONS() {
         return {
 
-            imageRoot : "/image/mapStuff/",
+            imageRoot : "/images/mapStuff",
             // Considering the "px"
             hexWidth : 60,
             hexHeight : 60,
@@ -55,7 +57,7 @@ export default class MapView {
     // Reverse of PositionNode function, i would say
     // Most crutch'y thing
     /**
-     * @return {Point}
+     * @return {OffsetCoordinate}
      * @param {Point} pixelPoint
      */
     pixelToPoint( pixelPoint ){
@@ -95,26 +97,26 @@ export default class MapView {
             ptInt.shiftPosition(Point.DIRECTIONS["ur"]);
         }
 
-        return ptInt;
+        return this.lastPoint = new OffsetCoordinate(ptInt.x, ptInt.y);
     }
 
     /**
      *
-     * @param {Node} node
-     * @param {Point} point // coordinates
-     * @param {Point} offsetPoint // px
+     * @param {HTMLElement} node
+     * @param {OffsetCoordinate} coordinate // coordinates
+     * @param {Point} [offsetPoint] // px
      */
-    addNode( node , point , offsetPoint ){
+    addNode( node , coordinate , offsetPoint ){
 
         if( offsetPoint === undefined ) offsetPoint = new Point(0,0);
 
         let x = this.options.offsetX; //+ this.board.clientWidth/2;
         let y = this.options.offsetY; //+ this.board.clientHeight/2;
 
-        x +=  this.options.hexWidth*(point.x);
-        y += (this.options.hexHeight - this.options.hexMiddleSection)*(point.y);
+        x +=  this.options.hexWidth*(coordinate.x);
+        y += (this.options.hexHeight - this.options.hexMiddleSection)*(coordinate.y);
 
-        x += this.options.hexWidth*(point.y & 1)/2;
+        x += this.options.hexWidth*(coordinate.y & 1)/2;
 
         node.style.marginLeft = x + offsetPoint.x + "px";
         node.style.marginTop  = y + offsetPoint.y + "px";

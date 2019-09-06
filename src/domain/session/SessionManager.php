@@ -42,12 +42,12 @@ class SessionManager implements SessionManagerInterface
 
     public function addClan(SessionInterface $session, ClanInterface $clan)
     {
-        $this->sessionDao->addClan($session, $clan);
+        return $this->sessionDao->addClan($session, $clan);
     }
 
     public function removeClan(SessionInterface $session, ClanInterface $clan)
     {
-        $this->sessionDao->removeClan($session, $clan);
+        return $this->sessionDao->removeClan($session, $clan);
     }
 
     public function findById(int $id): ?SessionInterface
@@ -74,7 +74,7 @@ class SessionManager implements SessionManagerInterface
 
     public function setClanData(SessionInterface $session, ClanInterface $clan, ClanData $data)
     {
-        $this->sessionDao->setClanData($session, $clan, $data);
+        return $this->sessionDao->setClanData($session, $clan, $data);
     }
 
     public function getClanData(SessionInterface $session, ClanInterface $clan): ?ClanData
