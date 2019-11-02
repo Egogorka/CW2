@@ -10,6 +10,7 @@ import PlansView from "Root/session/plans/plans-view";
 import {Plan} from "Root/session/plans/plans-model";
 
 import AttackView from "Root/session/plans/attack/attack-view";
+import AttackArrowView from "Root/session/plans/attack/attack-arrow-view";
 
 /*
  Every TypeView must have these methods
@@ -26,13 +27,25 @@ import AttackView from "Root/session/plans/attack/attack-view";
  *
  * @param {MapView} mapView
  * @param {MapState} mapState
+ *
+ * @param {User[]} userList
  */
-export default function ImportToPlansView( jsFrame, mapView, mapState , plansView , plansManager ) {
+export function MakeConnections( jsFrame, mapView, mapState , plansView , plansManager, userList ) {
+
+    // PlanView Handlers
 
     plansView.addPlanViewHandler( Plan.TYPES.attack , new AttackView(
-        jsFrame, mapView, mapState, plansView, plansManager
+        jsFrame, mapView, mapState, plansView, plansManager, userList
     ));
 
 
+    let attackArrowView = new AttackArrowView( mapView );
 
+    // PlansManager Events
+
+    plansManager.addHandlerCreate( (plansView.onCreate).bind(plansView), Plan.TYPES['attack'] );
+    plansManager.addHandlerDelete( (plansView.onDelete).bind(plansView), Plan.TYPES['attack'] );
+
+    plansManager.addHandlerCreate( (attackArrowView.onCreate).bind(attackArrowView), Plan.TYPES['attack']);
+    plansManager.addHandlerDelete( (attackArrowView.onDelete).bind(attackArrowView), Plan.TYPES['attack']);
 }

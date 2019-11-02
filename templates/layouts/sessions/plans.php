@@ -11,13 +11,13 @@
 
     <ul id="plans-holder" >
 
-      <li>
+      <!-- <li>
         #id <button> Remove </button> <button> Highlight </button> Attack from #hexid to #hexid (direction) <br>
         Players assigned : <ol>
             <li> #1username </li>
             <li> #2username </li>
          </ol>
-      </li>
+      </li> -->
 
     </ul>
 

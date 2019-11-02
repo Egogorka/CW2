@@ -33,4 +33,14 @@
     </div>
 </div>
 
+<div id="attack-add-users-window" style="display:none;">
+    <div class="window-div">
+        Select users that will be attached to this attack<br>
+        <form id="attack-users-form">
+            <input type="submit"><br>
+        </form>
+    </div>
+</div>
+
+
 

@@ -2,7 +2,9 @@
 <?php
 /**
  * @var \eduslim\interfaces\domain\sessions\SessionInterface $session
+ * @var string $usersJSON
  */
+
 ?>
 
 <?=$this->layout("layouts/sessions/layout")?>
@@ -12,7 +14,14 @@
 
 <div id="MapBoard"> </div>
 
-<script> var mapRaw ='<?=$session->getMapStateR()?>'; </script>
+<script>
+
+let serverData = {
+    mapRaw: '<?=$session->getMapStateR()?>',
+    usersJSON: '<?=$usersJSON?>'
+};
+
+</script>
 
 <script src="/dist/map/bundle.js"></script>
 

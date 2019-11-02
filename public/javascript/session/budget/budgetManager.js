@@ -18,7 +18,7 @@ export default class BudgetManager {
      * @return {boolean}
      */
     canAfford( cost ){
-        return ((this.budgetTotal - this.budgetSpend) > cost);
+        return ((this.budgetTotal - this.budgetSpend) >= cost);
     }
 
     /**
@@ -28,23 +28,23 @@ export default class BudgetManager {
         if (!this.canAfford(cost))
             throw new Error("Cant afford action with this cost, low budget");
 
-        if( cost > 0) this.budgetSpend += cost;
+        if( cost >= 0) this.budgetSpend += cost;
     }
 
     /**
      * @param {number} money
      */
     earn( money ){
-        if( money > 0) this.budgetEarn += money;
+        if( money >= 0) this.budgetEarn += money;
     }
 
     /**
      * @param {number} cost
      */
     deAfford( cost ){
-        if( cost < 0)
+        if( cost <= 0)
             throw new Error("You cant have negative cost");
-        if(this.budgetTotal > this.budgetSpend - cost)
+        if(this.budgetSpend < cost)
             throw new Error("You cant spend negative money in total");
 
         this.budgetSpend -= cost;
@@ -54,7 +54,7 @@ export default class BudgetManager {
      * @param {number} money
      */
     deEarn( money ){
-        if( money < 0){
+        if( money <= 0){
             throw new Error("You cant have negative money");
         }
         if( this.budgetEarn - money < 0){

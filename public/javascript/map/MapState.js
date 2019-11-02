@@ -2,7 +2,7 @@ import Point from './Point';
 import Cell from './Cell';
 
 import Hex from './Hex';
-import {OffsetCoordinate} from "Root/map/HexCoordinate";
+import {OffsetCoordinate, CubeCoordinate} from "Root/map/HexCoordinate";
 
 export default class MapState {
 
@@ -100,10 +100,13 @@ export default class MapState {
     }
 
     /**
-     * @param {OffsetCoordinate} coordinate
+     * @param {OffsetCoordinate|CubeCoordinate} coordinate
      * @return {Hex}
      */
     getHex( coordinate ) {
+        if( coordinate instanceof CubeCoordinate)
+            coordinate = coordinate.convertToOffset();
+
         return new Hex(this.map[coordinate.x][coordinate.y], coordinate );
     }
 

@@ -1,7 +1,7 @@
 import Cell from "./Cell";
 import Point from "./Point";
 
-import {OffsetCoordinate} from "Root/map/HexCoordinate";
+import {OffsetCoordinate, CubeCoordinate} from "Root/map/HexCoordinate";
 
 export default class MapView {
 
@@ -57,7 +57,7 @@ export default class MapView {
     // Reverse of PositionNode function, i would say
     // Most crutch'y thing
     /**
-     * @return {OffsetCoordinate}
+     * @return {CubeCoordinate}
      * @param {Point} pixelPoint
      */
     pixelToPoint( pixelPoint ){
@@ -97,16 +97,20 @@ export default class MapView {
             ptInt.shiftPosition(Point.DIRECTIONS["ur"]);
         }
 
-        return this.lastPoint = new OffsetCoordinate(ptInt.x, ptInt.y);
+        this.lastPoint = new OffsetCoordinate(ptInt.x, ptInt.y);
+        return this.lastPoint = this.lastPoint.convertToCube();
     }
 
     /**
      *
      * @param {HTMLElement} node
-     * @param {OffsetCoordinate} coordinate // coordinates
+     * @param {CubeCoordinate|OffsetCoordinate} coordinate // coordinates поддерживаем mapstate
      * @param {Point} [offsetPoint] // px
      */
     addNode( node , coordinate , offsetPoint ){
+
+        if( coordinate instanceof CubeCoordinate )
+            coordinate = coordinate.convertToOffset();
 
         if( offsetPoint === undefined ) offsetPoint = new Point(0,0);
 

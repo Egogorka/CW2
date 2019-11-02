@@ -1,5 +1,3 @@
-import Point from "Root/map/Point";
-
 // export class HexCoordinate {
 //
 //     /**
@@ -72,16 +70,31 @@ export class CubeCoordinate {
     }
 
     convertToOffset() {
-        let col = this.x + (this.z + (this.z&1)) / 2;
+        let col = this.x + (this.z - (this.z&1)) / 2;
         let row = this.z;
         return new OffsetCoordinate(col, row);
     }
 
     static directions() {
         return [
-            new CubeCoordinate(+1, -1, 0), new CubeCoordinate(+1, 0, -1), new CubeCoordinate(0, +1, -1),
-            new CubeCoordinate(-1, +1, 0), new CubeCoordinate(-1, 0, +1), new CubeCoordinate(0, -1, +1),
+            new CubeCoordinate(+1, 0, -1), new CubeCoordinate(+1, -1, 0), new CubeCoordinate(0, -1, +1),
+            new CubeCoordinate(-1, 0, +1), new CubeCoordinate(-1, +1, 0), new CubeCoordinate(0, +1, -1),
         ]
+    }
+
+    /**
+     * @param {CubeCoordinate} hex
+     */
+    static directionToNumber( hex ) {
+        console.log("Direction hex ", hex);
+        if(CubeCoordinate.distance(hex, new CubeCoordinate(0,0,0)) !== 1)
+            return 0;
+
+        let directions = CubeCoordinate.directions();
+        for( let i=0; i<6; i++){
+            if( CubeCoordinate.equal(hex, directions[i])) return i;
+        }
+        return 0;
     }
 
     /**
@@ -132,20 +145,18 @@ export class CubeCoordinate {
 }
 
 export class OffsetCoordinate {
-    // Considering EVEN-R type
+    // Considering ODD-R type
     constructor( x , y ) {
         this.x = x;
         this.y = y;
     }
 
     convertToCube(){
-        let x = this.x - (this.y + (this.y&1)) / 2;
+        let x = this.x - (this.y - (this.y&1)) / 2;
         let z = this.y;
         let y = -x-z;
 
-        let cube = new CubeCoordinate(x,y,z);
-        console.log(cube);
-        return cube;
+        return new CubeCoordinate(x,y,z);
     }
 
     /**
@@ -167,3 +178,66 @@ export class OffsetCoordinate {
     }
 }
 
+export class Coordinate {
+
+    // no constructor
+
+    /**
+     * @param {CubeCoordinate|OffsetCoordinate} a
+     * @return {CubeCoordinate}
+     */
+    static toCube( a ){
+        return ( a instanceof CubeCoordinate ) ? a : a.convertToCube();
+    }
+
+    /**
+     * @param {CubeCoordinate|OffsetCoordinate} a
+     * @param {CubeCoordinate|OffsetCoordinate} b
+     * @return {boolean}
+     */
+    static isNeighbor( a, b ){
+        a = Coordinate.toCube(a); b = Coordinate.toCube(b);
+        return CubeCoordinate.isNeighbor(a,b);
+    }
+
+    /**
+     * @param {CubeCoordinate|OffsetCoordinate} a
+     * @param {CubeCoordinate|OffsetCoordinate} b
+     * @return {CubeCoordinate}
+     */
+    static add( a, b ){
+        a = Coordinate.toCube(a); b = Coordinate.toCube(b);
+        return new CubeCoordinate( a.x + b.x , a.y + b.y );
+    }
+
+    /**
+     * @param {CubeCoordinate|OffsetCoordinate} a
+     * @param {CubeCoordinate|OffsetCoordinate} b
+     * @return {CubeCoordinate}
+     */
+    static sub( a, b ){
+        a = Coordinate.toCube(a); b = Coordinate.toCube(b);
+        return new CubeCoordinate( a.x - b.x , a.y - b.y );
+    }
+
+    /**
+     * @param {CubeCoordinate|OffsetCoordinate} a
+     * @param {CubeCoordinate|OffsetCoordinate} b
+     * @return {boolean}
+     */
+    static equal( a, b ){
+        a = Coordinate.toCube(a); b = Coordinate.toCube(b);
+        return (a.x === b.x) && (a.y === b.y);
+    }
+
+    /**
+     * @param {CubeCoordinate|OffsetCoordinate} a
+     * @param {CubeCoordinate|OffsetCoordinate} b
+     * @return {number}
+     */
+    static distance( a, b ){
+        a = Coordinate.toCube(a); b = Coordinate.toCube(b);
+        return (Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z)) / 2;
+    }
+
+}

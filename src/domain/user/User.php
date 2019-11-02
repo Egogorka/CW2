@@ -5,7 +5,7 @@ namespace eduslim\domain\user;
 use eduslim\interfaces\domain\clan\ClanInterface;
 use eduslim\interfaces\domain\user\UserInterface;
 
-class User implements UserInterface
+class User implements UserInterface, \JsonSerializable
 {
     protected $id;
 
@@ -82,6 +82,14 @@ class User implements UserInterface
     public function getClan(): ?ClanInterface
     {
         return $this->clan;
+    }
+
+
+    public function jsonSerialize()
+    {
+        $vars = get_object_vars($this);
+
+        return $vars;
     }
 
 }

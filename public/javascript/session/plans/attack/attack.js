@@ -16,6 +16,9 @@ export default class Attack {
 
         this.budget = budget;
 
+        /**
+         * @type {User[]}
+         */
         this.users = [];
     }
 

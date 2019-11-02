@@ -38,7 +38,13 @@ class SessionController extends Controller
         $user = $this->takeUser($request);
 
         $session = $this->sessionManager->findById($args['sessionId']);
+        $users   = $this->clansManager->getUsersOf($user->getClan());
+
+        dump($users);
+        dump(json_encode($users));
+
         $this->renderer->addData(['session' => $session]);
+        $this->renderer->addData(['usersJSON' => json_encode($users)]);
 
         $this->renderer->render('session', $args);
     }

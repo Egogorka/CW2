@@ -56,59 +56,6 @@ export default class PlansView {
     }
 
     /**
-     *
-     *
-     * @param {JSFrame} jsFrame
-     * @param {PlansManager} plansManager
-     */
-    constructor( jsFrame , plansManager ) {
-
-        this.jsFrame = jsFrame;
-        this.plansManager = plansManager;
-
-        this.handlers = [];
-
-        this.frame = this.createFrame(
-            PlansView.OPTIONS.plansWindow ,
-            "<div style='padding: 10px'>"+document.getElementById("plans-container").innerHTML+"</div>"
-        );
-
-        let that = this;
-
-        let navPlans = document.getElementById(PlansView.OPTIONS.navPlans);
-        navPlans.addEventListener("click", function (){
-            that.showPlansWindow();
-        });
-    }
-
-    init(){
-        this.appearPlanAdders(this.frame.$("#plans-adders"));
-    }
-
-    /**
-     * @param {HTMLElement} holder
-     */
-    appearPlanAdders( holder ){
-
-        holder.innerHTML = "";
-
-        console.log("appearPlanAdders");
-
-        for( let key in this.handlers ){
-            let node = this.handlers[key].showAdder();
-            node.style.display = "block";
-
-            console.log(key);
-
-            holder.appendChild(node);
-            //holder.appendChild(document.createElement("hr"));
-
-            this.handlers[key].afterAdderAdd( this.frame );
-        }
-
-    }
-
-    /**
      * @param {string} name
      * @param {string} html
      * @param {Object} [addStyle]
@@ -136,32 +83,34 @@ export default class PlansView {
         return frame;
     }
 
-    showPlansWindow() {
-        this.plansUpdate();
-        this.frame.show();
-    }
+    /**
+     * @param {JSFrame} jsFrame
+     * @param {PlansManager} plansManager
+     */
+    constructor( jsFrame, plansManager ){
 
-    plansUpdate() {
+        this.jsFrame = jsFrame;
+        this.plansManager = plansManager;
+        this.handlers = [];
 
-        let frame = this.jsFrame.getWindowByName( PlansView.OPTIONS.plansWindow );
+        this.frame = this.createFrame(
+            PlansView.OPTIONS.plansWindow ,
+            "<div style='padding: 10px'>"+document.getElementById("plans-container").innerHTML+"</div>"
+        );
 
-        frame.$("#plans-holder").innerHTML = "";
-
-        // for( let handler in this.handlers ){
-        //     handler.removeAllTypedPlans();
-        // }
+        for( let i=0; i<Plan.TYPES.length; i++ ){
+            this.frame.$("#plans-holder").innerHTML +=
+                "<hr>" +
+                "<h3>"+Plan.TYPES[i]+"</h3>" +
+                "<div data-plan-id=\""+i+"\" class='typed-plans-holder'></div>";
+        }
 
         let that = this;
-        this.plansManager.forEachPlan(function ( plan, key ) {
-            let handler = that.handlers[ plan.type ];
-            console.log(handler);
-            let planNode = handler.getPlanElement( plan.object );
-            let cont = document.createElement("li");
-            cont.innerHTML += "<p> Plan type : "+ Plan.TYPES[plan.type] +"</p>";
-            cont.appendChild(planNode);
-            frame.$("#plans-holder").appendChild(cont);
-        });
+        let navPlans = document.getElementById(PlansView.OPTIONS.navPlans);
 
+        navPlans.addEventListener("click", function (){
+            that.frame.show();
+        });
     }
 
     /**
@@ -169,16 +118,102 @@ export default class PlansView {
      * @param {Object} handler
      */
     addPlanViewHandler( type , handler ) {
-        if(!(type in Plan.TYPES) )
+        if (!(type in Plan.TYPES))
             throw new Error("No such type of plan");
 
         this.handlers[type] = handler;
     }
 
-    //planView( plan ) {
-    //    let node = document.createElement("li");
-    //
-    //     node.innerHTML += "Type : "+Plan.TYPES(plan.type);
-    // }
+    init(){
+        let holder = this.frame.$("#plans-adders");
+
+        holder.innerHTML = "";
+
+        console.log("appearPlanAdders");
+
+        console.log(this.handlers);
+
+        for( let key in this.handlers )
+            this.handlers[key].showAdder();
+    }
+
+    appearPlanAdder( node ){
+        let holder = this.frame.$("#plans-adders");
+
+        node.style.display = "block";
+
+        holder.appendChild(node);
+        holder.appendChild(document.createElement("hr"));
+    }
+
+    /**
+     * @param {Plan} plan
+     * @param {number} id
+     */
+    onCreate( plan, id ){
+
+        // For different types of plans we need to do different things
+        /** @type {HTMLElement} */
+
+        console.log("PLAN-VIEW : onCreate ");
+        console.log(this);
+
+        let planElement = this.handlers[ plan.type ].makePlanElement(plan.object);
+
+        planElement.setAttribute("planId"  , id.toString() );
+        planElement.setAttribute("planType", plan.type.toString() );
+
+        // But every plan must be placed in the list
+        /** @type {HTMLElement} */
+        let holder = this.frame.$("div[data-plan-id=\""+plan.type+"\"]");
+        holder.appendChild(planElement);
+
+        let delButton = document.createElement("button");
+        delButton.innerText = "Remove";
+        delButton.addEventListener("click", ()=>this.plansManager.removePlan(id, plan.type) );
+        planElement.appendChild(delButton);
+
+    }
+
+    /**
+     * @param {Plan} plan
+     * @param {number} id
+     */
+    onDelete( plan, id ){
+
+        let planElement = this.frame.$("div[planId=\""+id+"\"]");
+
+        /** @type {HTMLElement} */
+        let holder = this.frame.$("div[data-plan-id=\""+plan.type+"\"]");
+
+        holder.removeChild(planElement);
+
+    }
+
+    /**
+     * @param {Plan} plan
+     * @param {number} id
+     */
+    onUpdate( plan, id ){
+        this.onDelete(plan,id);
+        this.onCreate(plan,id);
+    }
 
 }
+//
+// /**
+//  * @param {number} type
+//  * @param {Object} handler
+//  */
+// addPlanViewHandler( type , handler ) {
+//     if(!(type in Plan.TYPES) )
+//         throw new Error("No such type of plan");
+//
+//     this.handlers[type] = handler;
+// }
+//
+// //planView( plan ) {
+// //    let node = document.createElement("li");
+// //
+// //     node.innerHTML += "Type : "+Plan.TYPES(plan.type);
+// // }
