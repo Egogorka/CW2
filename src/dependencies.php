@@ -1,5 +1,6 @@
 <?php
 // DIC configuration
+use Projek\Slim\Plates;
 
 $container = $app->getContainer();
 
@@ -19,7 +20,7 @@ $container['logger'] = function ( \Psr\Container\ContainerInterface $c) {
 };
 
 $container['view-slim'] = function (\Psr\Container\ContainerInterface $c) {
-    $view = new \Projek\Slim\Plates($c->get('settings')['view']);
+    $view = new Plates($c->get('settings')['view']);
 
     // Set \Psr\Http\Message\ResponseInterface object
     // Or you can optionaly pass `$c->get('response')` in `__construct` second parameter

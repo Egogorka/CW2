@@ -53,6 +53,8 @@ class IntroController
         $this->renderer->addData($args);
         $this->renderer->render( 'index' , $args );
 
+        dump($_SESSION);
+
     }
 
 }

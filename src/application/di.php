@@ -62,4 +62,12 @@ $container[\eduslim\application\controller\SessionController::class] = function 
     );
 };
 
+$container[\eduslim\application\controller\SocketController::class] = function (\Psr\Container\ContainerInterface $c) {
+    return new \eduslim\application\controller\SocketController(
+        $c->get(\eduslim\domain\session\SessionManager::class),
+        $c->get(\eduslim\domain\clan\ClansManager::class),
+        $c->get(\eduslim\domain\user\UserManager::class)
+    );
+};
+
 //

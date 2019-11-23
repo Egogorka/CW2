@@ -8,7 +8,7 @@ use eduslim\interfaces\domain\mapstate\PointInterface;
 
 class Point implements PointInterface
 {
-    /*const DIRECTIONS = [
+    const DIRECTIONS = [
         'ur' => 0,
         'rr' => 1,
         'dr' => 2,
@@ -22,7 +22,7 @@ class Point implements PointInterface
         3 => 'dl',
         4 => 'll',
         5 => 'ul',
-    ];*/
+    ];
 
     /**
      * @var int $posX
