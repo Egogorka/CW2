@@ -34,6 +34,7 @@ export default class MapView {
     constructor( MapBoardElement , options ){
 
         this.board   = MapBoardElement;
+        this.lastPoint = new CubeCoordinate(0,0);
 
         let standardOptions = MapView.OPTIONS;
 
@@ -122,6 +123,8 @@ export default class MapView {
 
         x += this.options.hexWidth*(coordinate.y & 1)/2;
 
+        console.log(x,y);
+
         node.style.marginLeft = x + offsetPoint.x + "px";
         node.style.marginTop  = y + offsetPoint.y + "px";
 
@@ -135,5 +138,29 @@ export default class MapView {
      */
     removeNode( node ){
         this.board.removeChild(node);
+    }
+
+    /**
+     *
+     * @param {HTMLElement} node
+     * @param {CubeCoordinate|OffsetCoordinate} coordinate
+     * @param {Point} [offsetPoint] // px
+     */
+    moveNode( node, coordinate, offsetPoint ){
+        if( offsetPoint === undefined ) offsetPoint = new Point(0,0);
+
+        if( coordinate instanceof CubeCoordinate )
+            coordinate = coordinate.convertToOffset();
+
+        let x = this.options.offsetX; //+ this.board.clientWidth/2;
+        let y = this.options.offsetY; //+ this.board.clientHeight/2;
+
+        x +=  this.options.hexWidth*(coordinate.x);
+        y += (this.options.hexHeight - this.options.hexMiddleSection)*(coordinate.y);
+
+        x += this.options.hexWidth*(coordinate.y & 1)/2;
+
+        node.style.marginLeft = x + offsetPoint.x + "px";
+        node.style.marginTop  = y + offsetPoint.y + "px";
     }
 }

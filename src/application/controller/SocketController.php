@@ -71,25 +71,12 @@ class SocketController
         //$data = json_decode($rawData);
         $package = new SocketPackage($rawData);
         switch ($package->getType()){
-            case SocketPackage::TYPES["verify"]:
-                //$_COOKIE["PHPSESSID"] = $package->getData()->cookie;
-                if( !is_integer($package->getData()->userId))
-                    echo "ERROR : Wrong format of userId";
-                else {
-                    $this->connectionsData[$connection->id] = $this->userManager->findById($package->getData()->userId);
-                    $connection->send(json_encode("Hello, " . $this->connectionsData[$connection->id]->getUsername()));
-                }
-                break;
-            case SocketPackage::TYPES["message"]:
-                /** @var TcpConnection $connect */
-                foreach ($this->worker->connections as $connect){
-                    $connect->send( json_encode([
-                        "type" => "message",
-                        "sender" => $this->connectionsData[$connection->id]->getUsername(),
-                        "data" => $package->getData()
-                    ]));
-                }
-                break;
+            case SocketPackage::TYPE_VERIFY:
+                $this->verify($connection, $package); break;
+            case SocketPackage::TYPE_MESSAGE:
+                $this->message($connection, $package); break;
+            case SocketPackage::TYPE_PLAN:
+                $this->plan($connection, $package); break;
 
         }
     }
@@ -100,5 +87,37 @@ class SocketController
     public function onClose( TcpConnection $connection) {
 
     }
+
+    private function verify( TcpConnection $connection, SocketPackage $package ) {
+        //$_COOKIE["PHPSESSID"] = $package->getData()->cookie;
+        if( !is_integer($package->getData()->userId))
+            echo "ERROR : Wrong format of userId";
+        else {
+            $this->connectionsData[$connection->id] = $this->userManager->findById($package->getData()->userId);
+            $connection->send(json_encode("Hello, " . $this->connectionsData[$connection->id]->getUsername()));
+        }
+    }
+
+    private function message( TcpConnection $connection, SocketPackage $package ) {
+        /** @var TcpConnection $connect */
+        foreach ($this->worker->connections as $connect){
+            $connect->send( json_encode([
+                "type" => SocketPackage::TYPE_MESSAGE,
+                "sender" => $this->connectionsData[$connection->id]->getUsername(),
+                "data" => $package->getData()
+            ]));
+        }
+    }
+
+    private function plan( TcpConnection $connection, SocketPackage $package ) {
+        // Понимаем, что это план
+
+        // Суём план в базу данных
+
+        // Рассылаем план по всем пользователям
+
+    }
+
+
 
 }

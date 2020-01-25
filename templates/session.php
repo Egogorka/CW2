@@ -23,5 +23,5 @@ let serverData = {
 
 </script>
 
-<script src="/dist/map/bundle.js"></script>
+<script src="/dist/session.bundle.js"></script>
 

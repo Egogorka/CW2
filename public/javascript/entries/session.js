@@ -1,11 +1,11 @@
 
 import {UserJSONParser} from "Root/user/user";
 
-import Point from "./Point.js";
-import MapView from "./MapView.js";
-import CellView from "./CellView.js";
+import Point from "Root/map/Point";
+import MapView from "Root/map/MapView";
+import CellView from "Root/map/CellView";
 
-import MapState from "./MapState.js";
+import MapState from "Root/map/MapState";
 
 import BudgetManager from "Root/session/budget/budgetManager";
 import PlansView from "Root/session/plans/plans-view";

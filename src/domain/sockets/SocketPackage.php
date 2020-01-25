@@ -7,14 +7,14 @@ namespace eduslim\domain\sockets;
 class SocketPackage
 {
 
-    const TYPES = [
-        "verify" => 0,
-        "message" => 1,
-    ];
+    const TYPE_VERIFY = "verify";
+    const TYPE_MESSAGE = "message";
+    const TYPE_PLAN = "plan";
 
-    const INV_TYPES = [
-        0 => "verify",
-        1 => "message",
+    const TYPES = [
+        self::TYPE_MESSAGE,
+        self::TYPE_VERIFY,
+        self::TYPE_PLAN,
     ];
 
     /** @var string */

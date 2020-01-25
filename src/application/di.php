@@ -70,4 +70,12 @@ $container[\eduslim\application\controller\SocketController::class] = function (
     );
 };
 
+$container[\eduslim\application\controller\MapEditorController::class] = function (\Psr\Container\ContainerInterface $c) {
+    return new \eduslim\application\controller\MapEditorController(
+        $c->get('logger'),
+        $c->get('view-slim'),
+        $c->get(\eduslim\domain\maps\MapsManager::class)
+    );
+};
+
 //

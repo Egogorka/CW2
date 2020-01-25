@@ -50,6 +50,9 @@ $app->group('', function (\Slim\App $app) {
 
     });
 
+    $app->map(["GET","POST"],"/maps/editor", \eduslim\application\controller\MapEditorController::class);
+
+
 })->add(function(Request $request, Response $response, callable $next){
 
     $user = $request->getAttribute('user');

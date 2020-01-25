@@ -7,6 +7,7 @@
  */
 
 // There is a $map variable
+/** @var \eduslim\domain\maps\Map $map **/
 
 ?>
 

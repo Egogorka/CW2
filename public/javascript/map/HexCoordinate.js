@@ -142,6 +142,50 @@ export class CubeCoordinate {
         return (CubeCoordinate.distance(a,b) === 1);
     }
 
+    /**
+     * @param {CubeCoordinate} a
+     * @param {CubeCoordinate} center
+     * @return {CubeCoordinate}
+     */
+    static rotate60clockwise( center, a ){
+        let tmp1 = CubeCoordinate.sub(a , center);
+        let tmp2 = new CubeCoordinate( -tmp1.z, -tmp1.x, -tmp1.y );
+        return CubeCoordinate.add(tmp2, center);
+    }
+
+    /**
+     * @param {CubeCoordinate} a
+     * @param {CubeCoordinate} center
+     * @return {CubeCoordinate}
+     */
+    static rotate120clockwise( center, a ){
+        let tmp1 = CubeCoordinate.sub(a , center);
+        let tmp2 = new CubeCoordinate( tmp1.y, tmp1.z, tmp1.x );
+        return CubeCoordinate.add(tmp2, center);
+    }
+
+    /**
+     * @param {CubeCoordinate} a
+     * @param {CubeCoordinate} center
+     * @return {CubeCoordinate}
+     */
+    static rotate180( center, a ){
+        let tmp1 = CubeCoordinate.sub(a , center);
+        let tmp2 = new CubeCoordinate( -tmp1.x, -tmp1.y, -tmp1.z );
+        return CubeCoordinate.add(tmp2, center);
+    }
+
+    /**
+     * @param {CubeCoordinate} a
+     * @param {CubeCoordinate} center
+     * @return {CubeCoordinate}
+     */
+    static rotate120aclockwise( center, a ){
+        let tmp1 = CubeCoordinate.sub(a , center);
+        let tmp2 = new CubeCoordinate( tmp1.z, tmp1.x, tmp1.y );
+        return CubeCoordinate.add(tmp2, center);
+    }
+
 }
 
 export class OffsetCoordinate {
