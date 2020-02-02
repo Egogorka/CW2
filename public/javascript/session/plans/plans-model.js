@@ -4,18 +4,13 @@ export class Plan {
 
     static get TYPES() {
         return {
-            attack : 0,
-            build  : 1,
-
-            0 : "attack",
-            1 : "build",
-
-            length : 2,
+            attack : "attack",
+            build  : "build",
         }
     }
 
     /**
-     * @param {number} type
+     * @param {string} type
      * @param {Object} object
      */
     constructor( type , object  ) {
@@ -42,14 +37,15 @@ export class PlansManager {
         this.budgetManager = budgetManager;
         this.plans = [];
 
-        this.handlersCreate = [];
-        this.handlersUpdate = [];
-        this.handlersDelete = [];
+        this.handlersCreate = {};
+        this.handlersUpdate = {};
+        this.handlersDelete = {};
 
-        for( let i = 0; i<Plan.TYPES.length; i++ ){
-            this.handlersCreate[i] = [];
-            this.handlersUpdate[i] = [];
-            this.handlersDelete[i] = [];
+        //for( let i = 0; i<Plan.TYPES.length; i++ ){
+        for( let type in Plan.TYPES) {
+            this.handlersCreate[type] = [];
+            this.handlersUpdate[type] = [];
+            this.handlersDelete[type] = [];
         }
     }
 
@@ -77,7 +73,7 @@ export class PlansManager {
 
     /**
      * @param {number} id
-     * @param {number} type
+     * @param {string} type
      * @return {Plan}
      */
     findPlan( id , type ) {
@@ -86,7 +82,7 @@ export class PlansManager {
 
     /**
      * @param {number} id
-     * @param {number} type
+     * @param {string} type
      */
     removePlan( id, type ) {
 
@@ -111,7 +107,7 @@ export class PlansManager {
     }
 
     /**
-     * @param {number} type
+     * @param {string} type
      * @param {function(Plan, number)} callback
      */
     forEachTypePlan(type, callback) {
@@ -127,7 +123,7 @@ export class PlansManager {
 
     /**
      * @param {PlanHandler} handler
-     * @param {number} type
+     * @param {string} type
      */
     addHandlerDelete( handler , type ){
         this.handlersDelete[type].push(handler);
@@ -135,7 +131,7 @@ export class PlansManager {
 
     /**
      * @param {PlanHandler} handler
-     * @param {number} type
+     * @param {string} type
      */
     addHandlerUpdate( handler , type ){
         this.handlersUpdate[type].push(handler);
@@ -143,7 +139,7 @@ export class PlansManager {
 
     /**
      * @param {PlanHandler} handler
-     * @param {number} type
+     * @param {string} type
      */
     addHandlerCreate( handler , type ){
         this.handlersCreate[type].push(handler);

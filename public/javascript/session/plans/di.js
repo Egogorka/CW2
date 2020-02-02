@@ -43,9 +43,9 @@ export function MakeConnections( jsFrame, mapView, mapState , plansView , plansM
 
     // PlansManager Events
 
-    plansManager.addHandlerCreate( (plansView.onCreate).bind(plansView), Plan.TYPES['attack'] );
-    plansManager.addHandlerDelete( (plansView.onDelete).bind(plansView), Plan.TYPES['attack'] );
+    plansManager.addHandlerCreate( (plansView.onCreate).bind(plansView), Plan.TYPES.attack );
+    plansManager.addHandlerDelete( (plansView.onDelete).bind(plansView), Plan.TYPES.attack );
 
-    plansManager.addHandlerCreate( (attackArrowView.onCreate).bind(attackArrowView), Plan.TYPES['attack']);
-    plansManager.addHandlerDelete( (attackArrowView.onDelete).bind(attackArrowView), Plan.TYPES['attack']);
+    plansManager.addHandlerCreate( (attackArrowView.onCreate).bind(attackArrowView), Plan.TYPES.attack);
+    plansManager.addHandlerDelete( (attackArrowView.onDelete).bind(attackArrowView), Plan.TYPES.attack);
 }

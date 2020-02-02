@@ -98,11 +98,12 @@ export default class PlansView {
             "<div style='padding: 10px'>"+document.getElementById("plans-container").innerHTML+"</div>"
         );
 
-        for( let i=0; i<Plan.TYPES.length; i++ ){
+        //for( let i=0; i<Plan.TYPES.length; i++ ){
+        for( let key in Plan.TYPES){
             this.frame.$("#plans-holder").innerHTML +=
                 "<hr>" +
-                "<h3>"+Plan.TYPES[i]+"</h3>" +
-                "<div data-plan-id=\""+i+"\" class='typed-plans-holder'></div>";
+                "<h3>"+Plan.TYPES[key]+"</h3>" +
+                "<div data-plan-id=\""+key+"\" class='typed-plans-holder'></div>";
         }
 
         let that = this;

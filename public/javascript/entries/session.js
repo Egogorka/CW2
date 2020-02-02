@@ -89,5 +89,5 @@ plansManager.addHandlerCreate(function (plan, id) {
     sockets.sendPackage(new SocketPackage(SocketPackage.TYPE_PLAN, {
 
     }));
-}, Plan.TYPES["attack"]);
+}, Plan.TYPES.attack);
 
