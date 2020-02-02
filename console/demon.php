@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
+
 use Workerman\Worker;
 
 if (PHP_SAPI == 'cli-server') {
@@ -74,8 +75,8 @@ $container = $app->getContainer();
 
 $ws_worker = new Worker("websocket://erem.sesc2018.dev.sesc-nsu.ru:8000");
 
-/** @var \eduslim\application\controller\SocketController $wsController */
-$wsController = $container->get(\eduslim\application\controller\SocketController::class);
+/** @var \eduslim\application\controller\SessionSocketController $wsController */
+$wsController = $container->get(\eduslim\application\controller\SessionSocketController::class);
 $wsController->setWorker($ws_worker);
 
 /** @var \eduslim\domain\user\UserManager $userManager */

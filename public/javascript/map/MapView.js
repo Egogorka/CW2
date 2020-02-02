@@ -123,7 +123,7 @@ export default class MapView {
 
         x += this.options.hexWidth*(coordinate.y & 1)/2;
 
-        console.log(x,y);
+        //console.log(x,y);
 
         node.style.marginLeft = x + offsetPoint.x + "px";
         node.style.marginTop  = y + offsetPoint.y + "px";

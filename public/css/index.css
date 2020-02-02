@@ -18,10 +18,9 @@ html {
 }
 
 body {
+    display: block;
+
     background:  url('/images/galaxy.png') top center no-repeat, url('/images/background_.jpg') repeat; /*#0B192E*/
-    /*display : grid;*/
-    /*grid-template-columns: 150px 1fr 1fr 1fr 1fr 150px;*/
-    /*grid-template-rows: 60px 50px 110px auto 50px;*/
 
     min-height: 100%;
     padding: 0;

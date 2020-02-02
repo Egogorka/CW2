@@ -12,7 +12,7 @@
         <a class="nav" href="/clans/">
             CLAN
         </a>
-        <a class="nav" href="/sessions.php">
+        <a class="nav" href="/old_stuff/sessions.php">
             SESSIONS
         </a>
         <a class="nav" href="/maps/">

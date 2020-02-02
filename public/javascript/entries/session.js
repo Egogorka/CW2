@@ -1,5 +1,5 @@
 
-import {UserJSONParser} from "Root/user/user";
+import User, {UserJSONParser} from "Root/user/user";
 
 import Point from "Root/map/Point";
 import MapView from "Root/map/MapView";
@@ -13,6 +13,8 @@ import {Plan, PlansManager} from "Root/session/plans/plans-model";
 
 import {MakeConnections} from "Root/session/plans/di";
 import {CubeCoordinate, OffsetCoordinate} from "Root/map/HexCoordinate";
+import SessionSockets from "Root/session/sockets/SessionSockets";
+import SocketPackage from "Root/session/sockets/SocketPackage";
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -21,8 +23,12 @@ import {CubeCoordinate, OffsetCoordinate} from "Root/map/HexCoordinate";
 
 let mapRaw = serverData.mapRaw;
 
+let user = new User();
+user.getFromJson(serverData.user);
+
 let userList = UserJSONParser(serverData.usersJSON);
 
+console.log(user);
 console.log(userList);
 
 let map = new MapState(mapRaw);
@@ -66,3 +72,22 @@ MakeConnections( mainJsFrame, view, map, plansView, plansManager, userList );
 plansView.init();
 
 console.log( plansManager );
+
+let sockets = new SessionSockets({
+    "userId" : user.id,
+    "clanId" : user.clanId,
+    "sessionId" : serverData.sessionId,
+});
+
+/** @var {SocketPackage} socketPackage */
+sockets.setMessageHandler( function ( socketPackage ) {
+    console.log( "Got data from server : ", socketPackage.getData());
+});
+
+/** @var {Plan} plan */
+plansManager.addHandlerCreate(function (plan, id) {
+    sockets.sendPackage(new SocketPackage(SocketPackage.TYPE_PLAN, {
+
+    }));
+}, Plan.TYPES["attack"]);
+

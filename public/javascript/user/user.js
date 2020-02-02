@@ -14,14 +14,21 @@ export default class User {
      * @param {string} username
      * @param {number} [id]
      */
-    constructor( username , id ){
+    constructor( username = "" , id ){
 
         this.id = (id !== undefined) ? id : null;
         this.name = username;
 
-
-
     }
+
+    getFromJson( json ){
+        let temp = JSON.parse(json);
+        this.id = temp.id;
+        this.name = temp.username;
+        this.clanId = temp.clanId;
+        this.clan = temp.clan;
+    }
+
 }
 
 /**
