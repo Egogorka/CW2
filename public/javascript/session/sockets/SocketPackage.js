@@ -1,28 +1,45 @@
 export default class SocketPackage{
 
-    static get TYPE_NONE()      {return "none";};
-
-    static get TYPE_ERROR()     {return "error";};
-
-    static get TYPE_VERIFY()    {return "verify";};
-    static get TYPE_MESSAGE()   {return "message";};
-    static get TYPE_PLAN()      {return "plan";};
+    // static get TYPE_NONE()      {return "none";};
+    //
+    // static get TYPE_ERROR()     {return "error";};
+    //
+    // static get TYPE_VERIFY()    {return "verify";};
+    // static get TYPE_MESSAGE()   {return "message";};
+    // static get TYPE_PLAN()      {return "plan";};
+    //
+    // static get TYPES() {
+    //     return [
+    //         SocketPackage.TYPE_VERIFY,
+    //         SocketPackage.TYPE_MESSAGE,
+    //         SocketPackage.TYPE_PLAN,
+    //
+    //         SocketPackage.TYPE_ERROR,
+    //     ];
+    // }
 
     static get TYPES() {
-        return [
-            SocketPackage.TYPE_VERIFY,
-            SocketPackage.TYPE_MESSAGE,
-            SocketPackage.TYPE_PLAN,
+        return {
+            none : "none",
+            error : "error",
 
-            SocketPackage.TYPE_ERROR,
-        ];
+            verify : "verify",
+            message : "message",
+
+            planCreate : "planCreate",
+            planDelete : "planDelete",
+
+            planningEnd : "planningEnd",
+
+            mapUpdate : "mapUpdate",
+        }
     }
 
     /**
      * @param {String} type
      * @param data
      */
-    constructor( type= SocketPackage.TYPE_NONE, data=null ) {
+    constructor( type= SocketPackage.TYPES.none, data=null ) {
         this.type = type;
         this.data = data;
         this.senderName = null; // if package was received, then it has a sender, either the server itself, or some person.
@@ -72,7 +89,7 @@ export default class SocketPackage{
      * @param {String} type
      */
     setType( type ) {
-        if( SocketPackage.TYPES.indexOf( type ) === -1 ) {
+        if(!(type in SocketPackage.TYPES)) {
             throw "SOCKET PACKAGE ERROR: Key " + type + " is not listed in types array";
         }
         this.type = type;

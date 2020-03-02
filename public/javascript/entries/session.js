@@ -61,7 +61,6 @@ view.board.addEventListener("click", function (e) {
     let pt = new Point(e.pageX, e.pageY);
     //alert(pt.x + " " + pt.y);
     console.log(view.pixelToPoint(pt));
-    console.log(view.lastPoint);
 });
 
 let budgetManager = new BudgetManager(1000);
@@ -79,15 +78,20 @@ let sockets = new SessionSockets({
     "sessionId" : serverData.sessionId,
 });
 
-/** @var {SocketPackage} socketPackage */
-sockets.setMessageHandler( function ( socketPackage ) {
-    console.log( "Got data from server : ", socketPackage.getData());
-});
+sockets.setHandler( function ( socketPackage ) {
+    console.log( "Got data from server : \n", socketPackage.getData(), "\n", socketPackage.getType(), "\n", socketPackage.getSenderName());
+}, SocketPackage.TYPES.message);
 
 /** @var {Plan} plan */
 plansManager.addHandlerCreate(function (plan, id) {
-    sockets.sendPackage(new SocketPackage(SocketPackage.TYPE_PLAN, {
-
-    }));
+    sockets.sendPackage(new SocketPackage(SocketPackage.TYPES.planCreate, plan.getJson()));
 }, Plan.TYPES.attack);
+
+sockets.setHandler( function (socketPackage) {
+    let plan = new Plan();
+    let data = socketPackage.getData();
+    plan.getFromJson(data);
+
+    console.log(plan);
+}, SocketPackage.TYPES.planCreate);
 

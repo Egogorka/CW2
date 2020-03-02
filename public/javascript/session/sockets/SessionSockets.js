@@ -1,21 +1,13 @@
 import SocketPackage from "Root/session/sockets/SocketPackage";
 
-const TYPE_VERIFY = SocketPackage.TYPE_VERIFY;
-const TYPE_MESSAGE = SocketPackage.TYPE_MESSAGE;
-const TYPE_PLAN = SocketPackage.TYPE_PLAN;
-
-const TYPE_ERROR = SocketPackage.TYPE_ERROR;
-
 export default class SessionSockets {
 
-    messageHandler (socketPackage) {};
-
-    planHandler (socketPackage) {};
-
     constructor(verificator) {
+        this.handlers = {};
+        console.log("handlers: ",this.handlers);
         this.ws = new WebSocket("ws://erem.sesc2018.dev.sesc-nsu.ru:8000");
 
-        let socketPackage = new SocketPackage(TYPE_VERIFY, verificator);
+        let socketPackage = new SocketPackage(SocketPackage.TYPES.verify, verificator);
 
         this.ws.onopen = function () {
             this.ws.send(socketPackage.getRawJson());
@@ -23,16 +15,12 @@ export default class SessionSockets {
 
         /** @param {MessageEvent} rawData */
         this.ws.onmessage = (rawData) => {
+            console.log("Got a package!\n", rawData.data);
             let socketPackage = new SocketPackage();
             try {
                 socketPackage.getFromRaw(rawData.data);
-                switch (socketPackage.getType()) {
-                    case TYPE_MESSAGE:
-                        this.messageHandler(socketPackage);
-                        break;
-                    case TYPE_PLAN:
-                        this.planHandler(socketPackage);
-                        break;
+                if (socketPackage.getType() in this.handlers) {
+                    this.handlers[socketPackage.getType()](socketPackage);
                 }
             } catch (e) {
                 console.log(e);
@@ -44,21 +32,27 @@ export default class SessionSockets {
     }
 
     /**
-     * @param {function} func
+     * @callback socketHandler
+     * @param {SocketPackage} socketPackage
      */
-    setMessageHandler( func ) {
-        this.messageHandler = func;
+
+    /**
+     * @param {string} type
+     * @param {socketHandler} func
+     */
+    setHandler( func, type ){
+        if( type in SocketPackage.TYPES ){
+            this.handlers[type] = func;
+        } else
+            throw "SESSION SOCKETS ERROR: Type "+type+" is not implemented/doesnt exist";
     }
 
     /**
-     * @param {function} func
+     * @param {SocketPackage} socketPackage
      */
-    setPlanHandler( func ) {
-        this.planHandler = func;
-    }
-
     sendPackage( socketPackage ) {
-        this.ws.send(socketPackage);
+        console.log("Sent a package!\n",socketPackage);
+        this.ws.send(socketPackage.getRawJson());
     }
 
 }

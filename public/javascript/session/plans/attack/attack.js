@@ -10,7 +10,7 @@ export default class Attack {
      * @param {Hex|null} hexTo
      * @param {number|null} budget
      */
-    constructor( hexFrom , hexTo , budget ){
+    constructor( hexFrom=null , hexTo=null , budget=0 ){
         this.hexFrom = hexFrom;
         this.hexTo = hexTo;
 
@@ -41,6 +41,25 @@ export default class Attack {
             }
         }
         throw new Error("No such user in this attack plan");
+    }
+
+    getJson(){
+        return JSON.stringify({
+            "users" : this.users,
+            "hexFrom" : this.hexFrom,
+            "hexTo" : this.hexTo,
+        });
+    }
+
+    getFromJson(json){
+        let rawData = JSON.parse(json);
+
+        this.users = [];
+        for( let user in rawData.users ){
+            // noinspection JSUnfilteredForInLoop
+            this.users[this.users.length] = new User(user.name, user.id);
+        }
+        console.log(rawData);
     }
 
 }

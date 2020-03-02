@@ -12,12 +12,12 @@ class SocketPackage
     const TYPE_VERIFY = "verify";
     const TYPE_MESSAGE = "message";
 
-    const TYPE_PLAN_CREATE = "plan_create";
-    const TYPE_PLAN_DELETE = "plan_delete";
+    const TYPE_PLAN_CREATE = "planCreate";
+    const TYPE_PLAN_DELETE = "planDelete";
 
-    const TYPE_PLANING_END = "planning_end";
+    const TYPE_PLANING_END = "planningEnd";
 
-    const TYPE_MAP_UPDATE = "map_update";
+    const TYPE_MAP_UPDATE = "mapUpdate";
 
 
     const TYPES = [

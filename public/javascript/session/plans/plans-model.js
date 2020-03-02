@@ -1,4 +1,5 @@
 import BudgetManager from "Root/session/budget/budgetManager";
+import BuildFromJson from "Root/session/plans/plan-build";
 
 export class Plan {
 
@@ -10,22 +11,51 @@ export class Plan {
     }
 
     /**
-     * @param {string} type
-     * @param {Object} object
+     * @param {string|null} type
+     * @param {Object|null} object
      */
-    constructor( type , object  ) {
+    constructor( type=null , object=null  ) {
 
         this.type = type;
 
         this.object = object;
 
-        if( object.hasOwnProperty("budget") ) {
+        if( object == null ){
+            return;
+        }
+
+        if( "budget" in object ) {
             this.budget = object.budget;
         } else
             this.budget = 0;
 
+        // Plan-object must implement getJson method to be able to send it to server
+        if((typeof object['getJson']) !== "function") { // Checking if object implements getJson() method
+            console.log(object);
+            throw "PLAN-MODEL ERROR : object must implement getJson method";
+        }
+
+        // Plan-object must implement getFromJson method to be able to get it from server
+        if((typeof object['getFromJson']) !== "function") { // Checking if object implements getFromJson() method
+            console.log(object);
+            throw "PLAN-MODEL ERROR : object must implement getJson method";
+        }
     }
 
+    getJson() {
+        return JSON.stringify({
+            "type" : this.type,
+            "budget" : this.budget,
+            "object" : this.object.getJson()
+        })
+    }
+
+    getFromJson(json) {
+        let data = JSON.parse(json);
+        this.type = data.type;
+        this.budget = data.budget;
+        this.object = BuildFromJson(data.object, data.type);
+    }
 }
 
 export class PlansManager {
