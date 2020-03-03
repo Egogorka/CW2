@@ -79,6 +79,7 @@ let sockets = new SessionSockets({
 });
 
 sockets.setHandler( function ( socketPackage ) {
+    alert("Got a message!");
     console.log( "Got data from server : \n", socketPackage.getData(), "\n", socketPackage.getType(), "\n", socketPackage.getSenderName());
 }, SocketPackage.TYPES.message);
 
@@ -92,6 +93,12 @@ sockets.setHandler( function (socketPackage) {
     let data = socketPackage.getData();
     plan.getFromJson(data);
 
-    console.log(plan);
-}, SocketPackage.TYPES.planCreate);
+    alert("Got a message! New attack!");
 
+    console.log(plan);
+
+    if( socketPackage.getSenderName() === user.name )
+        return;
+
+    plansManager.addPlan(plan);
+}, SocketPackage.TYPES.planCreate);

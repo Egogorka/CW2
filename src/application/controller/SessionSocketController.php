@@ -110,6 +110,15 @@ class SessionSocketController
      */
     public function onClose( TcpConnection $connection) {
 
+        $sessionId = $this->connectionsData[$connection->id]->getSessionId();
+        $clanId = $this->connectionsData[$connection->id]->getClanId();
+
+        if( $key = array_search($this->connections[$sessionId][$clanId], $connection) !== false ){
+            unset($this->connections[$sessionId][$clanId][$key]);
+        }
+        unset($this->connectionsData[$connection->id]);
+
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,8 +143,12 @@ class SessionSocketController
 
     private function messageClan( int $sessionId, int $clanId, SocketPackage $package ){
         echo "Messaging clan\n";
-        dump($package);
+
+        dump(count($this->connections[$sessionId][$clanId]));
+
         foreach ($this->connections[$sessionId][$clanId] as $connect){
+            echo "sent to:";
+            dump($connect->id);
             /** @var TcpConnection $connect */
             $connect->send($package->getJson());
         }
@@ -165,11 +178,12 @@ class SessionSocketController
         if(!key_exists($package->getData()->sessionId, $this->connections)) {
             $this->connections[$package->getData()->sessionId] = [];
         }
-        if(!key_exists($package->getData()->clanId, $this->connections)) {
+        if(!key_exists($package->getData()->clanId, $this->connections[$package->getData()->sessionId])) {
             $this->connections[$package->getData()->sessionId][$package->getData()->clanId] = [];
         }
 
-        $this->connections[$package->getData()->sessionId][$package->getData()->clanId][] = $connection;
+        $this->connections[$package->getData()->sessionId][$package->getData()->clanId][$connection->id] = $connection;
+        echo "Connections count : ".count($this->connections[$package->getData()->sessionId][$package->getData()->clanId])."\n";
 
         // Then add an entry in connectionsData
         $this->connectionsData[$connection->id] = new ConnectionData(
@@ -187,19 +201,27 @@ class SessionSocketController
     }
 
     private function message( TcpConnection $connection, SocketPackage $package ){
-        $connection->send($package);
+        $this->messageClan(
+            $this->connectionsData[$connection->id]->getSessionId(),
+            $this->connectionsData[$connection->id]->getClanId(),
+            $package
+        );
     }
 
     private function planCreate( TcpConnection $connection, SocketPackage $package ) {
         // TODO: Понимаем, что это план (??)
-
+//        $rawPlan = $package->getData()->
         // TODO: Тут должна быть проверка плана на валидность
 
         // Суём план в базу данных
 //        $this->sessionManager->getClanData();
 
         // Рассылаем план по всем пользователям
-        $this->messageClan($this->connectionsData[$connection->id]->getClanId(), $package);
+        $this->messageClan(
+            $this->connectionsData[$connection->id]->getSessionId(),
+            $this->connectionsData[$connection->id]->getClanId(),
+            $package
+        );
     }
 
     private function planDelete( TcpConnection $connection, SocketPackage $package ) {
@@ -210,7 +232,11 @@ class SessionSocketController
         // Высосываем план из базы данных
 
         // Рассылаем команду всем пользователям
-        $this->messageClan($this->connectionsData[$connection->id]->getClanId(), $package);
+        $this->messageClan(
+            $this->connectionsData[$connection->id]->getSessionId(),
+            $this->connectionsData[$connection->id]->getClanId(),
+            $package
+        );
     }
 
 }
