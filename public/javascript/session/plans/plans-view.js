@@ -159,7 +159,7 @@ export default class PlansView {
         console.log("PLAN-VIEW : onCreate ");
         console.log(this);
 
-        let planElement = this.handlers[ plan.type ].makePlanElement(plan.object);
+        let planElement = this.handlers[plan.type].makePlanElement(plan.object);
 
         planElement.setAttribute("planId"  , id.toString() );
         planElement.setAttribute("planType", plan.type.toString() );

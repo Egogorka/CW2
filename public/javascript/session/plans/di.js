@@ -30,6 +30,7 @@ import AttackArrowView from "Root/session/plans/attack/attack-arrow-view";
  *
  * @param {User[]} userList
  */
+
 export function MakeConnections( jsFrame, mapView, mapState , plansView , plansManager, userList ) {
 
     // PlanView Handlers

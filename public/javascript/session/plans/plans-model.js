@@ -3,6 +3,13 @@ import BuildFromJson from "Root/session/plans/plan-build";
 
 export class Plan {
 
+    /*
+    Event types:
+    planCreate
+    planUpdate
+    planDelete
+     */
+
     static get TYPES() {
         return {
             attack : "attack",

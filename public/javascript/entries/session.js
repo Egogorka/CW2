@@ -15,6 +15,8 @@ import {MakeConnections} from "Root/session/plans/di";
 import {CubeCoordinate, OffsetCoordinate} from "Root/map/HexCoordinate";
 import SessionSockets from "Root/session/sockets/SessionSockets";
 import SocketPackage from "Root/session/sockets/SocketPackage";
+import AttackView from "Root/session/plans/attack/attack-view";
+import AttackArrowView from "Root/session/plans/attack/attack-arrow-view";
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -31,14 +33,14 @@ let userList = UserJSONParser(serverData.usersJSON);
 console.log(user);
 console.log(userList);
 
-let map = new MapState(mapRaw);
+let mapState = new MapState(mapRaw);
 
-let view = new MapView(document.getElementById("MapBoard"), {
-    offsetX : -map.MapParams.minX*(MapView.OPTIONS.hexWidth) + 100,
-    offsetY : -map.MapParams.minY*(MapView.OPTIONS.hexHeight - MapView.OPTIONS.hexMiddleSection) + 100,
+let mapView = new MapView(document.getElementById("MapBoard"), {
+    offsetX : -mapState.MapParams.minX*(MapView.OPTIONS.hexWidth) + 100,
+    offsetY : -mapState.MapParams.minY*(MapView.OPTIONS.hexHeight - MapView.OPTIONS.hexMiddleSection) + 100,
 });
 
-let cellV = new CellView(view, {});
+let cellV = new CellView(mapView, {});
 
 /*
 console.log("MapParams");
@@ -51,23 +53,45 @@ console.log(map.map);
 */
 
 // Показываем карту
-map.forEachCell(function (cell, point) {
+mapState.forEachCell(function (cell, point) {
     cellV.appendHex(cell, point);
 });
 
 // Ставим на доску eventListener для проверки кликов
-view.board.addEventListener("click", function (e) {
-
+mapView.board.addEventListener("click", function (e) {
     let pt = new Point(e.pageX, e.pageY);
     //alert(pt.x + " " + pt.y);
-    console.log(view.pixelToPoint(pt));
+    console.log(mapView.pixelToPoint(pt));
 });
 
 let budgetManager = new BudgetManager(1000);
 let plansManager = new PlansManager(budgetManager);
 let plansView = new PlansView(mainJsFrame, plansManager);
+let attackView = new AttackView(mainJsFrame, mapView, mapState, plansView, plansManager, userList);
 
-MakeConnections( mainJsFrame, view, map, plansView, plansManager, userList );
+//MakeConnections( mainJsFrame, view, map, plansView, plansManager, userList );
+
+plansView.addPlanViewHandler( Plan.TYPES.attack , attackView);
+attackView.addHandlerCreate(function (attack) {
+    plansManager.addPlan(new Plan(Plan.TYPES.attack, attack));
+});
+attackView.addHandlerCreate(function (attack) {
+    let plan = new Plan(Plan.TYPES.attack, attack);
+    sockets.sendPackage(new SocketPackage(SocketPackage.TYPES.planCreate, plan.getJson()));
+});
+
+let attackArrowView = new AttackArrowView( mapView );
+
+// PlansManager Events
+
+plansManager.addHandlerCreate( (plansView.onCreate).bind(plansView), Plan.TYPES.attack );
+plansManager.addHandlerDelete( (plansView.onDelete).bind(plansView), Plan.TYPES.attack );
+
+plansManager.addHandlerCreate( (attackArrowView.onCreate).bind(attackArrowView), Plan.TYPES.attack);
+plansManager.addHandlerDelete( (attackArrowView.onDelete).bind(attackArrowView), Plan.TYPES.attack);
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
 plansView.init();
 
 console.log( plansManager );
@@ -83,10 +107,10 @@ sockets.setHandler( function ( socketPackage ) {
     console.log( "Got data from server : \n", socketPackage.getData(), "\n", socketPackage.getType(), "\n", socketPackage.getSenderName());
 }, SocketPackage.TYPES.message);
 
-/** @var {Plan} plan */
-plansManager.addHandlerCreate(function (plan, id) {
-    sockets.sendPackage(new SocketPackage(SocketPackage.TYPES.planCreate, plan.getJson()));
-}, Plan.TYPES.attack);
+// /** @var {Plan} plan */
+// plansManager.addHandlerCreate(function (plan, id) {
+//     sockets.sendPackage(new SocketPackage(SocketPackage.TYPES.planCreate, plan.getJson()));
+// }, Plan.TYPES.attack);
 
 sockets.setHandler( function (socketPackage) {
     let plan = new Plan();

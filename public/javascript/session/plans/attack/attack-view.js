@@ -36,6 +36,8 @@ export default class AttackView {
         this.plansView = plansView;
 
         this.usersList = usersList;
+
+        this.handlersCreate = [];
     }
 
     showAdder() {
@@ -144,7 +146,8 @@ export default class AttackView {
             }
 
             try {
-                that.plansManager.addPlan(new Plan(Plan.TYPES.attack, objAttack ));
+                //that.plansManager.addPlan(new Plan(Plan.TYPES.attack, objAttack ));
+                that.onCreate(objAttack);
                 console.log(that.plansManager);
             } catch (e) {
                 that.jsFrame.showToast({
@@ -159,6 +162,30 @@ export default class AttackView {
             return false;
         })
     }
+
+    /**
+     * @callback AttackHandler
+     * @param {Attack} plan
+     */
+
+    /**
+     * @param {Attack} attack
+     */
+    onCreate(attack){
+        for( let i=0; i<this.handlersCreate.length; i++){
+              this.handlersCreate[i](attack);
+        }
+    }
+
+    /**
+     * @param {AttackHandler} handler
+     */
+    addHandlerCreate(handler){
+        this.handlersCreate.push(handler);
+    }
+
+
+
 
     /**
      * @param {Attack} attack
@@ -178,4 +205,6 @@ export default class AttackView {
 
         return node;
     }
+
+
 }
