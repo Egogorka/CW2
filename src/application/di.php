@@ -78,4 +78,12 @@ $container[\eduslim\application\controller\MapEditorController::class] = functio
     );
 };
 
+$container[\eduslim\application\controller\ActionsController::class] = function (\Psr\Container\ContainerInterface $c) {
+    return new \eduslim\application\controller\ActionsController(
+        $c->get('logger'),
+        $c->get('view-slim'),
+        $c->get(\eduslim\domain\action\ActionManager::class)
+    );
+};
+
 //

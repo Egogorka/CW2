@@ -8,8 +8,6 @@
 
 namespace eduslim\interfaces\domain\action;
 
-// TODO ActionInterface
-
 interface ActionInterface
 {
     public function getId():?int;
@@ -19,4 +17,8 @@ interface ActionInterface
     public function getName():?string;
 
     public function setName(string $name);
+
+    public function getUrl():?string;
+
+    public function setUrl(string $url);
 }

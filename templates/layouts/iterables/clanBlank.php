@@ -4,6 +4,9 @@
  * User: EGor
  * Date: 31.03.2019
  * Time: 14:32
+ *
+ * @var \eduslim\interfaces\domain\clan\ClanInterface $clan
+ *
  */
 ?>
 

@@ -18,6 +18,9 @@ $app->map(['GET','POST'],'/auth/[{type}/[{name}/[{password}]]]' , \eduslim\appli
 // Maps
 $app->get('/maps/', \eduslim\application\controller\MapsController::class);
 
+// Actions
+$app->get('/actions[/]', \eduslim\application\controller\ActionsController::class);
+
 // Clans
 $app->map(['GET','POST'], '/clans/[{type}]', \eduslim\application\controller\ClansController::class);
 

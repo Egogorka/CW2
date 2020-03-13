@@ -5,6 +5,11 @@
  * Date: 31.03.2019
  * Time: 14:29
  */
+
+/**
+ * @var \eduslim\interfaces\domain\user\UserInterface $user
+ * @var \eduslim\interfaces\domain\clan\ClanInterface[] $clans
+ */
 ?>
 
 <?=$this->layout("layouts/main/layout") ?>
@@ -15,5 +20,5 @@
 
 <?php
 foreach ($clans as $clan)
-    $this->insert('layouts/clans/clanBlank', ["clan" => $clan]);
+    $this->insert('layouts/iterables/clanBlank', ["clan" => $clan]);
 ?>

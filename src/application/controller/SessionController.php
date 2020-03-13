@@ -11,7 +11,6 @@ use Projek\Slim\Plates;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Sessions\SessionsManager;
 
 class SessionController extends Controller
 {
@@ -40,11 +39,13 @@ class SessionController extends Controller
         $session = $this->sessionManager->findById($args['sessionId']);
         $users   = $this->clansManager->getUsersOf($user->getClan());
 
+
         //dump($users);
         //dump(json_encode($users));
 
         $this->renderer->addData(['session' => $session]);
         $this->renderer->addData(['usersJSON' => json_encode($users)]);
+
 
         $this->renderer->render('session', $args);
 

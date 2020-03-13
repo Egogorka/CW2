@@ -4,6 +4,7 @@
  * @var \eduslim\interfaces\domain\sessions\SessionInterface $session
  * @var string $usersJSON
  * @var \eduslim\interfaces\domain\user\UserInterface $user
+ * @var \eduslim\interfaces\domain\action\ActionInterface $action
  */
 ?>
 
@@ -21,6 +22,7 @@ let serverData = {
     sessionId : '<?=$session->getId()?>',
     mapRaw: '<?=$session->getMapStateR()?>',
     usersJSON: '<?=$usersJSON?>'
+    actionUrl: '<?=$action->getUrl()?>'
 };
 
 </script>

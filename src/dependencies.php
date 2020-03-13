@@ -41,6 +41,7 @@ require __DIR__ . '/domain/Exceptions.php';
 
 require __DIR__ . '/infrastructure/di.php'; // Внешние приложения(?)
 
+require __DIR__ . '/domain/action/di.php';
 require __DIR__ . '/domain/user/di.php';
 require __DIR__ . '/domain/maps/di.php';
 require __DIR__ . '/domain/clan/di.php';

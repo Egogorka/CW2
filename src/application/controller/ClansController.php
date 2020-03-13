@@ -42,7 +42,6 @@ class ClansController extends Controller
         } else {
             $this->main($request, $response, $args);
         }
-
     }
 
     protected function create(ServerRequestInterface $request, Response $response, array $args)
@@ -79,7 +78,7 @@ class ClansController extends Controller
         $this->renderer->render("clancreate", $args);
     }
 
-    protected function   main(ServerRequestInterface $request, Response $response, array $args)
+    protected function main(ServerRequestInterface $request, Response $response, array $args)
     {
         $this->takeUser($request);
 

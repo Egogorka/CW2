@@ -32,7 +32,8 @@ class SessionManager implements SessionManagerInterface
     }
 
 
-    protected function AssignObjects(SessionInterface $session){
+    protected function AssignObjects(SessionInterface $session)
+    {
         $map = $this->mapsDao->findById($session->getMapId());
         $mapState = new MapState($session->getMapStateR());
         $session->setMapState($mapState);

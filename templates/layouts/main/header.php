@@ -1,6 +1,6 @@
 
 <div id="logo">
-    <img src="/images/logo.png" style="max-width:calc(100% - 30px);">
+    <img src="/images/logo.png" style="max-width:calc(100% - 30px);" alt="No pic, no gimberlic">
 </div>
 
 <div id="navbar">
@@ -17,6 +17,9 @@
         </a>
         <a class="nav" href="/maps/">
             MAPS
+        </a>
+        <a class="nav" href="/actions/">
+            ACTIONS
         </a>
     </div>
 
