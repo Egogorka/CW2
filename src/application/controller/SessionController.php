@@ -46,7 +46,6 @@ class SessionController extends Controller
         $this->renderer->addData(['session' => $session]);
         $this->renderer->addData(['usersJSON' => json_encode($users)]);
 
-
         $this->renderer->render('session', $args);
 
     }

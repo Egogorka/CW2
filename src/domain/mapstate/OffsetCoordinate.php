@@ -4,9 +4,9 @@
 namespace eduslim\domain\mapstate;
 
 
-use eduslim\interfaces\domain\mapstate\PointInterface;
+use eduslim\interfaces\domain\mapstate\OffsetCoordinateInterface;
 
-class Point implements PointInterface
+class OffsetCoordinate implements OffsetCoordinateInterface
 {
     /*const DIRECTIONS = [
         'ur' => 0,

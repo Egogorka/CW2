@@ -10,10 +10,10 @@ namespace eduslim\domain\mapstate;
 
 
 use eduslim\domain\mapstate\Cell;
-use eduslim\domain\mapstate\Point;
+use eduslim\domain\mapstate\OffsetCoordinate;
 use eduslim\interfaces\domain\mapstate\CellInterface;
 use eduslim\interfaces\domain\mapstate\MapStateInterface;
-use eduslim\interfaces\domain\mapstate\PointInterface;
+use eduslim\interfaces\domain\mapstate\OffsetCoordinateInterface;
 
 class MapState implements MapStateInterface
 {
@@ -63,12 +63,12 @@ class MapState implements MapStateInterface
 
                 $cell = $map[$x][$y] = new Cell((int)$mapDec3[1] , (int)$mapDec3[2]);
 
-                $this->CheckCell($cell, new Point($x, $y));
+                $this->CheckCell($cell, new OffsetCoordinate($x, $y));
             }
         }
     }
 
-    protected function CheckCell(CellInterface $cell, PointInterface $point)
+    protected function CheckCell(CellInterface $cell, OffsetCoordinateInterface $point)
     {
         if($cell->getStructure() == CellInterface::STRUCTURES['base']){
                 $this->bases[] = array("pos" => $point, "cell" => $cell);
@@ -87,12 +87,12 @@ class MapState implements MapStateInterface
         }
     }
 
-    public function setCell(PointInterface $point, CellInterface $cell)
+    public function setCell(OffsetCoordinateInterface $point, CellInterface $cell)
     {
         $this->map[$point->getX()][$point->getY()] = $cell;
     }
 
-    public function getCell(PointInterface $point):CellInterface
+    public function getCell(OffsetCoordinateInterface $point):CellInterface
     {
         return $this->map[$point->getX()][$point->getY()];
     }

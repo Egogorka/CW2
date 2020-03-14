@@ -4,7 +4,7 @@
 namespace eduslim\interfaces\domain\mapstate;
 
 
-interface PointInterface
+interface OffsetCoordinateInterface
 {
     // clock rule
     const DIRECTIONS = [

@@ -75,7 +75,7 @@ class AuthController
         return $response;
     }
 
-    function  login(ServerRequestInterface $request, Response $response, array $args)
+    function login(ServerRequestInterface $request, Response $response, array $args)
     {
         $post = $request->getParsedBody();
 

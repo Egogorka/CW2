@@ -33,6 +33,8 @@
         <?=$this->insert("layouts/sessions/header")?>
     </header>
 
+    <?=$this->insert("layouts/sessions/action")?>
+
     <div style="z-index: 1">
     <?=$this->section("content")?>
     </div>
