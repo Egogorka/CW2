@@ -37,7 +37,7 @@ body {
 
     padding: 5px 20px 5px 20px;
 
-    height: 70px;
+    height: 50px;
 }
 
 #navigation {
@@ -65,14 +65,12 @@ body {
     color: #c1c1c1;
     font-size: 1.45em;
 
-    background-color: #120e18;
-    transition: background-color 1s;
-    box-shadow: inset 0 0 20px #070707;
+    transition: color 1s;
 
     /*grid-row: 2 / 3;*/
 }
 
-.nav:hover { background-color: #3c3868; }
+.nav:hover { color: #3c3868; }
 
 #logo {
     /*grid-column: 2 / 6;*/

@@ -1,7 +1,7 @@
 footer {
 
     height: calc(2vh + 20px);
-    width: 200px;
+    width: 100vw;
 
     background-color: #161616;
     box-shadow: inset 0 0 30px #070707;
@@ -12,20 +12,60 @@ footer {
 }
 
 #navbar {
-    width: auto;
+    width: 100%;
     height: 70px;
 
-    background-color: #161616;
+    background-color: rgba(16,16,16,0.8);
     box-shadow: inset 0 0 20px #070707;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    padding: 5px 20px 5px 20px;
+    padding: 5px 0 5px 0;
 
     position: fixed;
-    z-index: 1;
+    z-index: 200;
+}
+
+#navigation {
+    margin: 10px;
+}
+
+#clan-readiness {
+    display: flex;
+    margin: 10px;
+}
+.readyIcon {
+    width: 40px;
+    height: 40px;
+    box-shadow: inset 0 0 10px #070707;
+}
+
+.readyIcon.red.ready{background-color: red;}
+.readyIcon.yellow.ready{background-color: yellow;}
+.readyIcon.green.ready{background-color: #00ff00;}
+.readyIcon.cyan.ready{background-color: cyan;}
+.readyIcon.blue.ready{background-color: blue;}
+.readyIcon.purple.ready{background-color: magenta;}
+
+.readyIcon.red.notReady{background-color: #760000;}
+.readyIcon.yellow.notReady{background-color: #777700;}
+.readyIcon.green.notReady{background-color: #004400;}
+.readyIcon.cyan.notReady{background-color: #008080;}
+.readyIcon.blue.notReady{background-color: #000077;}
+.readyIcon.purple.notReady{background-color: #410041;}
+
+#budget-box {
+    margin: 10px;
+}
+#current-budget {
+    font-size: 2em;
+}
+#spendings {
+    color: #ff7777;
+    font-size: 1.5em;
+    float: right;
 }
 
 #MapBoard {
@@ -56,6 +96,6 @@ footer {
 }
 
 .window-div {
-    font-size: 1em;
+    font-size: 1.5em;
     padding: 10px
 }
