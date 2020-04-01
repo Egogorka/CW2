@@ -127,13 +127,6 @@ export default class PlansView {
 
     init(){
         let holder = this.frame.$("#plans-adders");
-
-        holder.innerHTML = "";
-
-        console.log("appearPlanAdders");
-
-        console.log(this.handlers);
-
         for( let key in this.handlers )
             this.handlers[key].showAdder();
     }

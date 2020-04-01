@@ -186,6 +186,9 @@ export class CubeCoordinate {
         return CubeCoordinate.add(tmp2, center);
     }
 
+    toString(){
+        return this.x+":"+this.y+":"+this.z;
+    }
 }
 
 export class OffsetCoordinate {

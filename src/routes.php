@@ -5,8 +5,13 @@ use Slim\Http\Response;
 
 //// Routes
 
-// Testing
+// TestAction
+$app->get('/TestAction[/]',\eduslim\infrastructure\actions\TestActionController::class);
 
+// Actions outlet(??)
+$app->post('/actions/receiver[/]', \eduslim\application\controller\ActionReceiverController::class );
+
+// Testing
 $app->get('/test[.php]', \eduslim\application\controller\DemoController::class);
 
 // Main

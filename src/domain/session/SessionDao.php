@@ -85,11 +85,15 @@ class SessionDao extends Dao
     public function setClanData( SessionInterface $session, ClanInterface $clan, ClanData $data)
     {
         try {
-            $this->connection->perform('UPDATE sessions_clans SET clanInfo=:clanData WHERE sessionId=:sessionId AND clanId=:clanId',
+            $sql = 'UPDATE sessions_clans SET color=:color, budget=:budget, plans=:plans, plansStatus=:plansStatus  WHERE sessionId=:sessionId AND clanId=:clanId';
+            $this->connection->perform($sql,
                 [
                     'clanId' => $clan->getId(),
                     'sessionId' => $session->getId(),
-                    'clanData' => $data->toJSON()
+                    'color' => $data->getColor(),
+                    'budget' => $data->getBudget(),
+                    'plans' => json_encode($data->getPlans()),
+                    'plansStatus' => $data->getPlansStatus()
                 ]);
             return true;
         } catch (\PDOException $e) {
@@ -102,15 +106,44 @@ class SessionDao extends Dao
 
     public function getClanData( SessionInterface $session, ClanInterface $clan):?ClanData
     {
-        $result = $this->connection->fetchOne('SELECT * FROM sessions_clans WHERE (sessionId=:sessionId, clanId=:clanId)',
+        $result = $this->connection->fetchOne('SELECT * FROM sessions_clans WHERE (sessionId=:sessionId AND clanId=:clanId)',
                 [
                     'clanId' => $clan->getId(),
                     'sessionId' => $session->getId()
                 ]);
 
+        return new ClanData(
+            $result["color"],
+            $result["budget"],
+            $result["plans"],
+            $result["plansStatus"]
+        );
+    }
 
-        return new ClanData($result['clanInfo']);
+    /**
+     * @param SessionInterface $session
+     * @return integer[] //clanId array
+     */
+    public function getAllClansInSession( SessionInterface $session ):array {
+        return $this->connection->fetchAll(
+            'SELECT clanId FROM sessions_clans WHERE (sessionId=:sessionId)',
+            [
+                'sessionId' => $session->getId()
+            ]
+        );
+    }
 
+    /**
+     * @param SessionInterface $session
+     * @return integer[] //clanId array
+     */
+    public function getReadyClans( SessionInterface $session ):array {
+        return $this->connection->fetchAll(
+            'SELECT clanId FROM sessions_clans WHERE (sessionId=:sessionId AND plansStatus='.ClanData::PLANNING_END.')',
+            [
+                'sessionId' => $session->getId()
+            ]
+        );
     }
 
     public function save( SessionInterface $session ):bool

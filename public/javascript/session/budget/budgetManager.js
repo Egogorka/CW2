@@ -1,9 +1,10 @@
-export default class BudgetManager {
-
+export default class BudgetManager
+{
     /**
      * @param {number} budget
      */
-    constructor( budget ) {
+    constructor( budget )
+    {
 
         this.budgetTotal = budget;
 
@@ -29,6 +30,8 @@ export default class BudgetManager {
             throw new Error("Cant afford action with this cost, low budget");
 
         if( cost >= 0) this.budgetSpend += cost;
+
+        (new BudgetEvent(BudgetEvent.TYPES.afford, cost)).cast();
     }
 
     /**
@@ -36,6 +39,8 @@ export default class BudgetManager {
      */
     earn( money ){
         if( money >= 0) this.budgetEarn += money;
+
+        (new BudgetEvent(BudgetEvent.TYPES.earn, money)).cast();
     }
 
     /**
@@ -48,6 +53,8 @@ export default class BudgetManager {
             throw new Error("You cant spend negative money in total");
 
         this.budgetSpend -= cost;
+
+        (new BudgetEvent(BudgetEvent.TYPES.deAfford, cost)).cast();
     }
 
     /**
@@ -61,6 +68,39 @@ export default class BudgetManager {
             throw new Error("You cant earn negative money");
         }
         this.budgetEarn -= money;
+
+        (new BudgetEvent(BudgetEvent.TYPES.deEarn, money)).cast();
     }
 
+}
+
+export class BudgetEvent {
+
+    static get TYPES() {
+        return {
+            afford : "afford",
+            earn   : "earn",
+
+            deAfford : "deAfford",
+            deEarn   : "deEarn",
+        }
+    }
+
+    constructor(type, amount) {
+        this.event = new CustomEvent("BudgetEvent",{
+            bubbles : true,
+            detail : {
+                type : type,
+                amount : amount
+            }
+        });
+    }
+
+    cast() {
+        document.dispatchEvent(this.event);
+    }
+
+    static addHandler( func ){
+        document.addEventListener("BudgetEvent", func);
+    }
 }

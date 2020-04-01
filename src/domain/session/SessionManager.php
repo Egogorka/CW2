@@ -4,6 +4,7 @@
 namespace eduslim\domain\session;
 
 
+use eduslim\domain\clan\ClansDao;
 use eduslim\domain\maps\MapsDao;
 use eduslim\interfaces\domain\action\ActionInterface;
 use eduslim\interfaces\domain\clan\ClanInterface;
@@ -21,14 +22,18 @@ class SessionManager implements SessionManagerInterface
     /** @var SessionDao */
     protected $sessionDao;
 
+    /** @var ClansDao */
+    protected $clansDao;
+
     /** @var MapsDao */
     protected $mapsDao;
 
-    public function __construct(LoggerInterface $logger, SessionDao $sessionDao, MapsDao $mapsDao)
+    public function __construct(LoggerInterface $logger, SessionDao $sessionDao, MapsDao $mapsDao, ClansDao $clansDao)
     {
         $this->logger = $logger;
         $this->sessionDao = $sessionDao;
         $this->mapsDao = $mapsDao;
+        $this->clansDao = $clansDao;
     }
 
 
@@ -39,16 +44,6 @@ class SessionManager implements SessionManagerInterface
         $session->setMapState($mapState);
         $session->setMap($map);
         return $session;
-    }
-
-    public function addClan(SessionInterface $session, ClanInterface $clan)
-    {
-        return $this->sessionDao->addClan($session, $clan);
-    }
-
-    public function removeClan(SessionInterface $session, ClanInterface $clan)
-    {
-        return $this->sessionDao->removeClan($session, $clan);
     }
 
     public function findById(int $id): ?SessionInterface
@@ -73,6 +68,18 @@ class SessionManager implements SessionManagerInterface
         return [null];
     }
 
+    ////////////////////////////////////////////////////////////////
+
+    public function addClan(SessionInterface $session, ClanInterface $clan)
+    {
+        return $this->sessionDao->addClan($session, $clan);
+    }
+
+    public function removeClan(SessionInterface $session, ClanInterface $clan)
+    {
+        return $this->sessionDao->removeClan($session, $clan);
+    }
+
     public function setClanData(SessionInterface $session, ClanInterface $clan, ClanData $data)
     {
         return $this->sessionDao->setClanData($session, $clan, $data);
@@ -81,6 +88,34 @@ class SessionManager implements SessionManagerInterface
     public function getClanData(SessionInterface $session, ClanInterface $clan): ?ClanData
     {
         return $this->sessionDao->getClanData($session, $clan);
+    }
+
+    /**
+     * @param SessionInterface $session
+     * @return ClanInterface[]
+     */
+    public function getAllClansInSession(SessionInterface $session): array
+    {
+        $clans = [];
+        $clanIds = $this->sessionDao->getAllClansInSession($session);
+        foreach ($clanIds as $clanId){
+            $clans[] = $this->clansDao->findById($clanId["clanId"]);
+        }
+        return $clans;
+    }
+
+    /**
+     * @param SessionInterface $session
+     * @return ClanInterface[]
+     */
+    public function getReadyClans(SessionInterface $session): array
+    {
+        $clans = [];
+        $clanIds = $this->sessionDao->getReadyClans($session);
+        foreach ($clanIds as $clanId){
+            $clans[] = $this->clansDao->findById($clanId["clanId"]);
+        }
+        return $clans;
     }
 
     public function save(SessionInterface $session)

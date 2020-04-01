@@ -8,6 +8,7 @@ import CellView from "Root/map/CellView";
 import MapState from "Root/map/MapState";
 
 import BudgetManager from "Root/session/budget/budgetManager";
+import BudgetView from "Root/session/budget/budgetView";
 import PlansView from "Root/session/plans/plans-view";
 import {Plan, PlansManager} from "Root/session/plans/plans-model";
 
@@ -64,20 +65,33 @@ mapView.board.addEventListener("click", function (e) {
     console.log(mapView.pixelToPoint(pt));
 });
 
-let budgetManager = new BudgetManager(1000);
+let budgetManager = new BudgetManager(serverData.budget);
+let budgetView = new BudgetView(budgetManager);
+
 let plansManager = new PlansManager(budgetManager);
+
 let plansView = new PlansView(mainJsFrame, plansManager);
 let attackView = new AttackView(mainJsFrame, mapView, mapState, plansView, plansManager, userList);
 
 //MakeConnections( mainJsFrame, view, map, plansView, plansManager, userList );
 
+/////////////////////////////////////////////////////////////////
 plansView.addPlanViewHandler( Plan.TYPES.attack , attackView);
+
+plansView.init();
+/////////////////////////////////////////////////////////////////
+
 attackView.addHandlerCreate(function (attack) {
     plansManager.addPlan(new Plan(Plan.TYPES.attack, attack));
 });
 attackView.addHandlerCreate(function (attack) {
     let plan = new Plan(Plan.TYPES.attack, attack);
     sockets.sendPackage(new SocketPackage(SocketPackage.TYPES.planCreate, plan.getJson()));
+});
+
+plansView.frame.on("#plan-end-button", "click", function () {
+    console.log("Planning end");
+    sockets.sendPackage(new SocketPackage(SocketPackage.TYPES.planningEnd));
 });
 
 let attackArrowView = new AttackArrowView( mapView );
@@ -92,7 +106,7 @@ plansManager.addHandlerDelete( (attackArrowView.onDelete).bind(attackArrowView),
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-plansView.init();
+
 
 console.log( plansManager );
 

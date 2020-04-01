@@ -7,19 +7,19 @@
 
     <div id="navigation">
         <a class="nav" href="/">
-            MAIN
+            Main
         </a>
         <a class="nav" href="/clans/">
-            CLAN
+            Clan
         </a>
         <a class="nav" href="/old_stuff/sessions.php">
-            SESSIONS
+            Sessions
         </a>
         <a class="nav" href="/maps/">
-            MAPS
+            Maps
         </a>
         <a class="nav" href="/actions/">
-            ACTIONS
+            Actions
         </a>
     </div>
 

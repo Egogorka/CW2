@@ -21,9 +21,9 @@ class ActionManager
         $this->actionDao = $actionDao;
     }
 
-    public function findById(int $id):?ActionInterface
+    public function findById(?int $id):?ActionInterface
     {
-        return $this->actionDao->findById($id);
+        return (is_null($id)) ? null : $this->actionDao->findById($id);
     }
 
     public function findByName(string $name):?ActionInterface

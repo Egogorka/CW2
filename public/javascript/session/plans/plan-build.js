@@ -1,8 +1,9 @@
 import {Plan} from "Root/session/plans/plans-model";
 import Attack from "Root/session/plans/attack/attack";
 
-export default function BuildFromJson( json, type ) {
-    let obj;
+export default function BuildFromJson( json ) {
+    let obj = JSON.parse(json);
+    let type = obj.type;
     switch (type) {
         case Plan.TYPES.attack:
             obj = new Attack();

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var \eduslim\interfaces\domain\action\ActionInterface $action
+ */
+?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +15,7 @@
 
     <!--<script src="/dist/require.js"></script>-->
     <script src="/javascript/external/jsFrame.js"></script>
-    <script src="https://kit.fontawesome.com/2483e0511a.js"></script>
+    <script src="/javascript/external/fontAwesome.js"></script>
 
 </head>
 
@@ -29,11 +35,11 @@
 </script>
 
 <div style="z-index: 0">
-    <header style="z-index: 200">
-        <?=$this->insert("layouts/sessions/header")?>
-    </header>
+    <?=$this->insert("layouts/sessions/header")?>
 
-    <?=$this->insert("layouts/sessions/action")?>
+    <?php
+        (is_null($action)) ? null : $this->insert("layouts/sessions/action");
+    ?>
 
     <div style="z-index: 1">
     <?=$this->section("content")?>

@@ -1,10 +1,12 @@
 
+
+
 <?=$this->insert("layouts/sessions/planTypes/attack") ?>
 
 <div id="plans-container" style="display: none;">
 
     <div id="plans-adders">
-        <p id="test1"> Add attack plan on the board <button>Add</button> </p>
+        <p> End planning <button id="plan-end-button"><></button> </p>
     </div>
 
     <hr>

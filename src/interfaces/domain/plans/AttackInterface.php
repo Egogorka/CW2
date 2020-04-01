@@ -18,6 +18,4 @@ interface AttackInterface extends PlanInterface
 
     public function getUsers():array;
     public function setUsers(array $users):void;
-
-    static function getFromJson( string $raw ):AttackInterface;
 }

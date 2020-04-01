@@ -12,6 +12,7 @@ use eduslim\domain\session\plans\PlanTemp;
 use eduslim\domain\user\User;
 use eduslim\interfaces\domain\mapstate\HexInterface;
 use eduslim\interfaces\domain\plans\AttackInterface;
+use eduslim\interfaces\domain\plans\PlanInterface;
 use eduslim\interfaces\domain\user\UserInterface;
 
 class Attack extends PlanTemp implements AttackInterface
@@ -38,6 +39,8 @@ class Attack extends PlanTemp implements AttackInterface
         $this->hexTo = $hexTo;
         $this->hexFrom = $hexFrom;
         $this->users = $users;
+
+        $this->type = PlanTemp::TYPE_ATTACK;
     }
 
     /**
@@ -88,9 +91,11 @@ class Attack extends PlanTemp implements AttackInterface
         $this->users = $users;
     }
 
-    static function getFromJson(string $raw): AttackInterface
+    static function getFromJson(string $raw):PlanInterface
     {
-        $arr = json_encode($raw);
+        $data = json_decode($raw, true);
+        $arr = json_decode($data["object"], true);
+
         $hexTo = new Hex(
             new Cell($arr["hexTo"]["cell"]["color"], $arr["hexTo"]["cell"]["structure"]),
             new OffsetCoordinate($arr["hexTo"]["coordinate"]["x"], $arr["hexTo"]["coordinate"]["y"])
@@ -101,12 +106,26 @@ class Attack extends PlanTemp implements AttackInterface
         );
         /** @var static $user */
         $users = [];
-        foreach ($arr["users"] as $username){
-            $user = new User();
-            $user->setUsername($username);
-            $users[] = $user;
+        foreach ($arr["users"] as $user){
+            $userN = new User();
+            $userN->setUsername($user["username"]);
+            $userN->setId($user["id"]);
+            $users[] = $userN;
         }
-        return new Attack($arr["budget"], $hexTo, $hexFrom, $users);
+        return new Attack($data["budget"], $hexTo, $hexFrom, $users);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "type" => "attack",
+            "budget" => $this->getBudget(),
+            "object" => json_encode([
+                "hexTo" => $this->getHexTo(),
+                "hexFrom" => $this->getHexFrom(),
+                "users" => $this->getUsers(),
+            ])
+        ];
     }
 
 }

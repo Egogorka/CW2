@@ -115,8 +115,14 @@ export default class MapView {
 
         if( offsetPoint === undefined ) offsetPoint = new Point(0,0);
 
+        this.board.appendChild(node);
+
         let x = this.options.offsetX; //+ this.board.clientWidth/2;
         let y = this.options.offsetY; //+ this.board.clientHeight/2;
+
+        //Centering node
+        x -= (node.clientWidth - this.options.hexWidth)/2;
+        y -= (node.clientHeight - this.options.hexHeight)/2;
 
         x +=  this.options.hexWidth*(coordinate.x);
         y += (this.options.hexHeight - this.options.hexMiddleSection)*(coordinate.y);
@@ -127,8 +133,6 @@ export default class MapView {
 
         node.style.marginLeft = x + offsetPoint.x + "px";
         node.style.marginTop  = y + offsetPoint.y + "px";
-
-        this.board.appendChild(node);
 
     }
 

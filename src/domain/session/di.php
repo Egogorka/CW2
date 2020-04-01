@@ -17,6 +17,7 @@ $container[\eduslim\domain\session\SessionManager::class] = function (\Psr\Conta
     return new \eduslim\domain\session\SessionManager(
         $c->get('logger'),
         $c->get(\eduslim\domain\session\SessionDao::class),
-        $c->get(\eduslim\domain\maps\MapsDao::class)
+        $c->get(\eduslim\domain\maps\MapsDao::class),
+        $c->get(\eduslim\domain\clan\ClansDao::class)
     );
 };

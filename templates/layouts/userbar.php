@@ -1,5 +1,5 @@
 
-<div>
+<div style="margin: 10px">
 
     <?php /** @var \eduslim\domain\user\User $user */
     if(!empty($user)) :

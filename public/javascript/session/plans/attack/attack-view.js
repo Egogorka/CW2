@@ -13,7 +13,7 @@ import PlansView from "Root/session/plans/plans-view";
 import {CubeCoordinate, Coordinate} from "Root/map/HexCoordinate";
 
 import Hex from "Root/map/Hex";
-import user from "Root/user/user";
+import User from "Root/user/user";
 
 export default class AttackView {
 
@@ -64,8 +64,8 @@ export default class AttackView {
         let usersHolder = usersWindow.$("#attack-users-form");
         for( let i=0; i<this.usersList.length; i++){
             console.log("counting", i);
-            console.log(this.usersList[i].name+"<input type='checkbox' name='"+i+"'><br>");
-            usersHolder.innerHTML +=  this.usersList[i].name+"<input type='checkbox' name='pos"+i+"'><br>";
+            console.log(this.usersList[i].username+"<input type='checkbox' name='"+i+"'><br>");
+            usersHolder.innerHTML +=  this.usersList[i].username+"<input type='checkbox' name='pos"+i+"'><br>";
         }
         /////////////////////////////////////////////////////////////////////////////////////
 
@@ -193,15 +193,17 @@ export default class AttackView {
      */
     makePlanElement( attack ) {
         // Part where HTMLElement creates to show info about attack
+        console.log(attack);
         let node = document.createElement("div");
 
-        node.innerHTML += "Budget : " + attack.budget + "<br>";
-        node.innerHTML += "HexFrom : " + attack.hexFrom.toString() + "<br>";
-        node.innerHTML += "HexTo : " + attack.hexTo.toString() + "<br>";
-        node.innerHTML += "Users : <br>";
+        node.innerHTML += "<p>Attack from "+attack.hexFrom.coordinate.convertToCube()+" to "+attack.hexTo.coordinate.convertToCube()+"</p>";
+        node.innerHTML += "<p>Budget : " + attack.budget + "</p>";
+        node.innerHTML += "Players assigned : <br> <ul>";
+
         for(let i=0; i< attack.users.length; i++){
-            node.innerHTML += i+" "+attack.users[i].name+"<br>";
+            node.innerHTML += "<li>"+attack.users[i].username+"</li>";
         }
+        node.innerHTML += "</ul>";
 
         return node;
     }

@@ -54,12 +54,16 @@ export default class Attack {
     }
 
     getFromJson(json){
-        let rawData = JSON.parse(json);
+        let obj = JSON.parse(json);
+        this.budget = obj.budget;
+        let rawData = JSON.parse(obj.object);
 
         this.users = [];
-        for( let user in rawData.users ){
+
+        console.log("Users: ", rawData.users);
+        for( let key in rawData.users ){
             // noinspection JSUnfilteredForInLoop
-            this.users[this.users.length] = new User(user.name, user.id);
+            this.users[this.users.length] = new User(rawData.users[key].username, rawData.users[key].id);
         }
 
         let hexFrom = new Hex(

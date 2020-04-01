@@ -4,7 +4,7 @@
 namespace eduslim\interfaces\domain\mapstate;
 
 
-interface HexInterface
+interface HexInterface extends \JsonSerializable
 {
     public function getCell():CellInterface;
     public function setCell(CellInterface $cell):void;

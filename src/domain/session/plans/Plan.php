@@ -22,6 +22,4 @@ class Plan
         $this->type = $type;
         $this->object = $object;
     }
-
-
 }

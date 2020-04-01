@@ -12,7 +12,7 @@ use eduslim\interfaces\domain\user\UserInterface;
 
 class ClansDao extends Dao
 {
-    public function findById($id):?ClanInterface
+    public function findById(int $id):?ClanInterface
     {
         if ($result = $this->connection->fetchObject( 'SELECT * FROM clans WHERE id=:id', ['id' => $id], Clan::class)) {
             return $result;

@@ -6,7 +6,7 @@ export default class User {
      * @return {boolean}
      */
     static equal( user1, user2 ){
-        return user1.name === user2.name;
+        return user1.username === user2.username;
     }
 
     /**
@@ -17,14 +17,14 @@ export default class User {
     constructor( username = "" , id ){
 
         this.id = (id !== undefined) ? id : null;
-        this.name = username;
+        this.username = username;
 
     }
 
     getFromJson( json ){
         let temp = JSON.parse(json);
         this.id = temp.id;
-        this.name = temp.username;
+        this.username = temp.username;
         this.clanId = temp.clanId;
         this.clan = temp.clan;
     }

@@ -66,8 +66,8 @@ export default class CellView {
         hexagon.src = CellView.IMAGE_TABLE[cell.color];
         structure.src = CellView.IMAGE_TABLE[cell.structure];
 
-        hexagon.style.width = this.options.hexWidth + "px";
-        hexagon.style.height = this.options.hexHeight + "px";
+        hexagon.style.width = (this.options.hexWidth+2) + "px";
+        hexagon.style.height = (this.options.hexHeight+2) + "px";
         hexagon.id = point.x + ";" + point.y + ";H";
         hexagon.classList.add("hexagon");
 
@@ -76,14 +76,14 @@ export default class CellView {
         structure.id = point.x + ";" + point.y + ";S";
         structure.classList.add("structure");
 
-        let structureOffset = new Point(
-            (this.options.hexWidth - this.options.structureWidth)/2,
-            (this.options.hexHeight - this.options.structureHeight)/2
-        );
+        // let structureOffset = new Point(
+        //     (this.options.hexWidth - this.options.structureWidth)/2,
+        //     (this.options.hexHeight - this.options.structureHeight)/2
+        // );
 
         this.mapView.addNode(hexagon, point, new Point(0,0));
         if( cell.structure !== Cell.STRUCTURES.noStruct ) {
-            this.mapView.addNode(structure, point, structureOffset);
+            this.mapView.addNode(structure, point);
         }
     }
 

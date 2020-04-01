@@ -22,5 +22,10 @@ interface SessionManagerInterface
     function getClanData( SessionInterface $session, ClanInterface $clan ):?ClanData;
     function setClanData( SessionInterface $session, ClanInterface $clan, ClanData $data);
 
+    /** @return ClanInterface[] */
+    public function getAllClansInSession(SessionInterface $session): array;
+    /** @return ClanInterface[] */
+    public function getReadyClans(SessionInterface $session): array;
+
     function save( SessionInterface $session );
 }

@@ -58,4 +58,17 @@ class Hex implements HexInterface
     {
         $this->coordinate = $coordinate;
     }
+
+    public function JsonSerialize(){
+        return [
+            "cell" => [
+                "color" => $this->cell->getColor(),
+                "structure" => $this->cell->getStructure(),
+            ],
+            "coordinate" => [
+                "x" => $this->coordinate->getX(),
+                "y" => $this->coordinate->getY()
+            ]
+        ];
+    }
 }

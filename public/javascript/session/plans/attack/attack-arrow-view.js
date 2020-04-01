@@ -139,28 +139,28 @@ export default class AttackArrowView {
         let height = MapView.OPTIONS.hexHeight;
         switch (dir) {
             case 0: // on 1h (30 degrees)
-                offset.x = width/2;
-                offset.y = -height/4;
+                offset.x = width/4;
+                offset.y = -height/2;
                 break;
             case 1: // on 3h (90 degrees)
                 offset.x = width/2;
-                offset.y = height/4;
+                offset.y = 0;
                 break;
             case 2: // on 5h (150 degrees)
-                offset.x = width/2;
+                offset.x = width/4;
                 offset.y = height/2;
                 break;
             case 3: // on 7h (210 degrees (-150))
-                offset.x = 0;
+                offset.x = -width/4;
                 offset.y = height/2;
                 break;
             case 4: // on 9h (270 degrees (-90))
                 offset.x = -width/2;
-                offset.y = height/4;
+                offset.y = 0;
                 break;
             case 5: // on 11h (330 degrees (-30))
-                offset.x = 0;
-                offset.y = -height/4;
+                offset.x = -width/4;
+                offset.y = -height/2;
                 break;
             default: throw Error("Direction must be set");
         }

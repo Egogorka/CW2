@@ -61,7 +61,7 @@ export class Plan {
         let data = JSON.parse(json);
         this.type = data.type;
         this.budget = data.budget;
-        this.object = BuildFromJson(data.object, data.type);
+        this.object = BuildFromJson(json);
     }
 }
 

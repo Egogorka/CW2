@@ -58,7 +58,8 @@ $container[\eduslim\application\controller\SessionController::class] = function 
         $c->get('view-slim'),
         $c->get(\eduslim\domain\user\UserManager::class),
         $c->get(\eduslim\domain\clan\ClansManager::class),
-        $c->get(\eduslim\domain\session\SessionManager::class)
+        $c->get(\eduslim\domain\session\SessionManager::class),
+        $c->get(\eduslim\domain\action\ActionManager::class)
     );
 };
 

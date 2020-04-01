@@ -4,6 +4,8 @@
 namespace eduslim\application\controller;
 
 use eduslim\domain\clan\ClansManager;
+use eduslim\domain\session\ClanData;
+use eduslim\domain\session\plans\PlanTemp;
 use eduslim\domain\session\SessionManager;
 use eduslim\domain\sockets\ConnectionData;
 use eduslim\domain\sockets\SocketPackage;
@@ -45,7 +47,7 @@ class SessionSocketController
     protected $connections;
 
     /** @var ConnectionData[] */ //чтобы не сетать самим connection'ам данные
-    protected $connectionsData;
+    protected $connectionsData; // connectionsData[connection->id]
 
     /**
      * SocketController constructor.
@@ -63,7 +65,8 @@ class SessionSocketController
         $this->connections = [];
     }
 
-    public function setWorker( Worker $worker ){
+    public function setWorker( Worker $worker )
+    {
         $this->worker = &$worker;
     }
 
@@ -72,7 +75,8 @@ class SessionSocketController
     /**
      * @param TcpConnection $connection
      */
-    public function onConnection( TcpConnection $connection) {
+    public function onConnection( TcpConnection $connection)
+    {
 
     }
 
@@ -80,7 +84,8 @@ class SessionSocketController
      * @param TcpConnection $connection
      * @param \JsonSerializable|string $rawData
      */
-    public function onMessage( TcpConnection $connection, $rawData) {
+    public function onMessage( TcpConnection $connection, $rawData)
+    {
         //$data = json_decode($rawData);
         $package = new SocketPackage();
 
@@ -93,22 +98,29 @@ class SessionSocketController
         if( key_exists($connection->id, $this->connectionsData)) // Проверяем, есть ли за коннектом что-то в датах
             $package->setSender($this->connectionsData[$connection->id]->getUser());
 
-        switch ($package->getType()){
-            case SocketPackage::TYPE_VERIFY:
-                $this->verify($connection, $package); break;
-            case SocketPackage::TYPE_MESSAGE:
-                $this->message($connection, $package); break;
-            case SocketPackage::TYPE_PLAN_CREATE:
-                $this->planCreate($connection, $package); break;
-            case SocketPackage::TYPE_PLAN_DELETE:
-                $this->planDelete($connection, $package); break;
-        }
+        // Calling packet handling methods
+        $handler = array($this,$package->getType());
+        if( is_callable($handler) )
+            $handler($connection, $package);
+
+
+//        switch ($package->getType()){
+//            case SocketPackage::TYPE_VERIFY:
+//                $this->verify($connection, $package); break;
+//            case SocketPackage::TYPE_MESSAGE:
+//                $this->message($connection, $package); break;
+//            case SocketPackage::TYPE_PLAN_CREATE:
+//                $this->planCreate($connection, $package); break;
+//            case SocketPackage::TYPE_PLAN_DELETE:
+//                $this->planDelete($connection, $package); break;
+//        }
     }
 
     /**
      * @param TcpConnection $connection
      */
-    public function onClose( TcpConnection $connection) {
+    public function onClose( TcpConnection $connection)
+    {
 
         $sessionId = $this->connectionsData[$connection->id]->getSessionId();
         $clanId = $this->connectionsData[$connection->id]->getClanId();
@@ -123,25 +135,49 @@ class SessionSocketController
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private function messageEveryone( SocketPackage $package ) {
+    private function getClanData( TcpConnection $connection )
+    {
+        $data = $this->connectionsData[$connection->id];
+
+        $session = $this->sessionManager->findById($data->getSessionId());
+        $clan    = $this->clansManager->findById($data->getClanId());
+
+        return $this->sessionManager->getClanData($session, $clan);
+    }
+
+    private function setClanData( TcpConnection $connection, ClanData $data )
+    {
+        $data = $this->connectionsData[$connection->id];
+
+        $session = $this->sessionManager->findById($data->getSessionId());
+        $clan    = $this->clansManager->findById($data->getClanId());
+
+        $this->sessionManager->setClanData($session, $clan, $data);
+    }
+
+    private function messageEveryone( SocketPackage $package )
+    {
         /** @var TcpConnection $connect */
         foreach ($this->worker->connections as $connect){
             $connect->send($package->getJson());
         }
     }
 
-    private function messageSession( int $sessionId, SocketPackage $package ) {
-        foreach ($this->connections[$this->connectionsData[$sessionId]] as $clans){
-            foreach ($clans as $connections){
+    private function messageSession( int $sessionId, SocketPackage $package )
+    {
+        echo "Messaging session: ".$sessionId."\n";
+        dump(count($this->connections[$sessionId]));
+
+        foreach ($this->connections[$sessionId] as $clans){
+            foreach ($clans as $connect){
                 /** @var TcpConnection $connect */
-                foreach ($connections as $connect){
-                    $connect->send($package->getJson());
-                }
+                $connect->send($package->getJson());
             }
         }
     }
 
-    private function messageClan( int $sessionId, int $clanId, SocketPackage $package ){
+    private function messageClan( int $sessionId, int $clanId, SocketPackage $package )
+    {
         echo "Messaging clan\n";
 
         dump(count($this->connections[$sessionId][$clanId]));
@@ -156,7 +192,8 @@ class SessionSocketController
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private function verify( TcpConnection $connection, SocketPackage $package ) {
+    private function verify( TcpConnection $connection, SocketPackage $package )
+    {
         //$_COOKIE["PHPSESSID"] = $package->getData()->cookie;
 
         if( !intval($package->getData()->userId) ) { //проверяем, можно ли привести к числу
@@ -198,9 +235,20 @@ class SessionSocketController
 
         $package->setSender($this->userManager->findById($package->getData()->userId));
         $connection->send($packageOut->getJson());
+
+        // Send all plans
+        $data = $this->getClanData($connection);
+        foreach( $data->getPlans() as $plan){
+            $packageOut = new SocketPackage(
+                SocketPackage::TYPE_PLAN_CREATE,
+                json_encode($plan)
+            );
+            $connection->send($packageOut->getJson());
+        }
     }
 
-    private function message( TcpConnection $connection, SocketPackage $package ){
+    private function message( TcpConnection $connection, SocketPackage $package )
+    {
         $this->messageClan(
             $this->connectionsData[$connection->id]->getSessionId(),
             $this->connectionsData[$connection->id]->getClanId(),
@@ -208,29 +256,25 @@ class SessionSocketController
         );
     }
 
-    private function planCreate( TcpConnection $connection, SocketPackage $package ) {
-        // TODO: Понимаем, что это план (??)
-//        $rawPlan = $package->getData()->
-        // TODO: Тут должна быть проверка плана на валидность
+    private function planCreate( TcpConnection $connection, SocketPackage $package )
+    {
+        $plan = PlanTemp::getFromJson($package->getData());
 
-        // Суём план в базу данных
-//        $this->sessionManager->getClanData();
+        $data = $this->connectionsData[$connection->id];
+
+        $session = $this->sessionManager->findById($data->getSessionId());
+        $clan    = $this->clansManager->findById($data->getClanId());
+
+        $clanData = $this->sessionManager->getClanData($session,$clan);
+        $clanData->addPlan($plan);
+        $this->sessionManager->setClanData($session,$clan,$clanData);
 
         // Рассылаем план по всем пользователям
-        $this->messageClan(
-            $this->connectionsData[$connection->id]->getSessionId(),
-            $this->connectionsData[$connection->id]->getClanId(),
-            $package
-        );
+        $this->messageClan($session->getId(), $clan->getId(), $package);
     }
 
-    private function planDelete( TcpConnection $connection, SocketPackage $package ) {
-        // Понимаем, что это план (??)
-
-        // Тут должна быть проверка плана на валидность
-
-        // Высосываем план из базы данных
-
+    private function planDelete( TcpConnection $connection, SocketPackage $package )
+    {
         // Рассылаем команду всем пользователям
         $this->messageClan(
             $this->connectionsData[$connection->id]->getSessionId(),
@@ -239,6 +283,32 @@ class SessionSocketController
         );
     }
 
+    private function planningEnd( TcpConnection $connection, SocketPackage $package )
+    {
+        $data = $this->connectionsData[$connection->id];
 
+        $session = $this->sessionManager->findById($data->getSessionId());
+        $clan    = $this->clansManager->findById($data->getClanId());
+
+        // Update clanData
+        $clanData = $this->sessionManager->getClanData($session, $clan);
+        if( $clanData->getPlansStatus() == ClanData::PLANNING_END){
+            echo "Already ended planning";
+            return;
+        }
+
+        $clanData->setPlansStatus(ClanData::PLANNING_END);
+        $this->sessionManager->setClanData($session, $clan, $clanData);
+
+        $this->messageSession($session->getId(), $package);
+
+//        // Check if every clan is ready for action
+//        $readyClans = $this->sessionManager->getReadyClans($session);
+//        $allClans   = $this->sessionManager->getAllClansInSession($session);
+
+//        if( count($readyClans) == count($allClans) ){
+//            // do something
+//        }
+    }
 
 }
